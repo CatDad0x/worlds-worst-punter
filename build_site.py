@@ -3,7 +3,9 @@ Builds the WC 2026 First Shot On Target Edge Finder website.
 UI matches the design spec exactly.
 """
 import json, math, os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+
+AEST = timezone(timedelta(hours=10))  # Brisbane — no daylight saving
 
 CACHE = "cache"
 
@@ -167,6 +169,26 @@ FK_SPECIALISTS = {
     "Hirving Lozano", "Alexis Vega",
 }
 
+# Players with confirmed injuries / fitness doubts — penalised -60% (bookies may lag)
+# Update this list as tournament news comes in
+INJURED_DOUBTFUL = {
+    "Neymar Jr", "Neymar",           # ACL recovery, fitness doubt
+    "Gavi",                           # Knee injury recovery
+    "Trent Alexander-Arnold",        # Thigh injury
+}
+
+# High-press / early-game attackers — known to shoot in first 15 mins
+# +10% boost on top of position timing (separate from FK)
+EARLY_SHOOTERS = {
+    "Kylian Mbappe", "Vinicius Jr", "Bukayo Saka", "Leroy Sane",
+    "Lamine Yamal", "Nico Williams", "Jamal Musiala", "Florian Wirtz",
+    "Son Heungmin", "Heung-Min Son", "Marcus Rashford", "Antoine Griezmann",
+    "Sadio Mane", "Ismaila Sarr", "Luis Diaz", "Rafael Leao",
+    "Cody Gakpo", "Donyell Malen", "Viktor Gyokeres", "Alexander Isak",
+    "Richarlison", "Gabriel Martinelli", "Endrick",
+    "Hirving Lozano", "Santiago Gimenez",
+}
+
 COUNTRY_FLAGS = {
     "Mexico":"🇲🇽","South Africa":"🇿🇦","South Korea":"🇰🇷","Czech Republic":"🇨🇿",
     "Canada":"🇨🇦","Bosnia & Herzegovina":"🇧🇦","USA":"🇺🇸","Paraguay":"🇵🇾",
@@ -275,18 +297,23 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
             has_nat = False
             nat_apps = nat_sot = None
 
-        timing = POS_TIMING.get(pos, 1.0)
-        fk_boost = 1.12 if name in FK_SPECIALISTS else 1.0
-        model_lam = comb_lam * timing * fk_boost
-        is_fk = name in FK_SPECIALISTS
+        timing      = POS_TIMING.get(pos, 1.0)
+        fk_boost    = 1.12 if name in FK_SPECIALISTS else 1.0
+        early_boost = 1.10 if name in EARLY_SHOOTERS else 1.0
+        injured     = name in INJURED_DOUBTFUL
+        inj_penalty = 0.40 if injured else 1.0   # -60% if confirmed doubt
 
-        # Determine team from official WC squad lookup
+        model_lam = comb_lam * timing * fk_boost * early_boost * inj_penalty
+        is_fk = name in FK_SPECIALISTS
+        is_early = name in EARLY_SHOOTERS
+
         team = find_player_team(name)
 
         players.append({
             "name": name, "pos": pos, "price": bi["price"], "bm": bi["bm"],
             "bm_lam": bm_lam, "model_lam": model_lam, "has_nat": has_nat,
-            "nat_apps": nat_apps, "nat_sot": nat_sot, "is_fk": is_fk,
+            "nat_apps": nat_apps, "nat_sot": nat_sot,
+            "is_fk": is_fk, "is_early": is_early, "injured": injured,
             "team": team,
         })
 
@@ -354,7 +381,7 @@ def best_edges_rows(all_games):
                 <div class="be-player">
                   <div class="avatar" style="background:{col}">{ini}</div>
                   <div>
-                    <div class="be-name">{p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""}</div>
+                    <div class="be-name">{p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""} {"<span class='early-tag'>⚡EARLY</span>" if p.get("is_early") else ""} {"<span class='inj-tag'>⚠ DOUBT</span>" if p.get("injured") else ""}</div>
                     <div class="be-country">{COUNTRY_FLAGS.get(p.get("team", p["home"]),"")} {p.get("team", p["home"])}</div>
                   </div>
                 </div>
@@ -380,7 +407,7 @@ def match_player_rows(players):
         med = f'<span class="medal">{medals[i]}</span>' if medals[i] else f'<span class="rank-sm">{i+1}</span>'
         rows.append(f"""              <tr>
                 <td>{med}</td>
-                <td class="td-pname"><span class="p-flag">{COUNTRY_FLAGS.get(p.get("team",""),"")}</span> {p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""}</td>
+                <td class="td-pname"><span class="p-flag">{COUNTRY_FLAGS.get(p.get("team",""),"")}</span> {p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""} {"<span class='early-tag'>⚡</span>" if p.get("is_early") else ""} {"<span class='inj-tag'>⚠ DOUBT</span>" if p.get("injured") else ""}</td>
                 <td class="td-model">{p["model_pct"]}%</td>
                 <td class="td-bm">{p["bm_pct"]}%</td>
                 <td>{edge_pill(p["edge"])}</td>
@@ -423,7 +450,7 @@ def match_cards(games):
               <th class="th-m">CAT DAD MODEL</th>
               <th class="th-b">BOOKIE</th>
               <th>EDGE <span class="th-info">ⓘ</span></th>
-              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>ODDS</th>
               <th>CONFIDENCE</th>
             </tr>
           </thead>
@@ -521,6 +548,8 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 
 /* ── FK TAG ── */
 .fk-tag{{font-size:.55rem;font-weight:800;background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;padding:1px 4px;border-radius:3px;letter-spacing:.3px;vertical-align:middle}}
+.early-tag{{font-size:.55rem;font-weight:800;background:#3b82f622;color:#60a5fa;border:1px solid #3b82f644;padding:1px 4px;border-radius:3px;letter-spacing:.3px;vertical-align:middle}}
+.inj-tag{{font-size:.55rem;font-weight:800;background:#ef444422;color:#ef4444;border:1px solid #ef444444;padding:1px 5px;border-radius:3px;letter-spacing:.3px;vertical-align:middle}}
 
 /* ── FILTER BAR ── */
 .filter-bar{{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}}
@@ -743,7 +772,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
             <th class="th-m">CAT DAD MODEL</th>
             <th class="th-b">BOOKIE</th>
             <th>EDGE ⓘ</th>
-            <th>BEST ODDS ⓘ</th>
+            <th>ODDS</th>
             <th>CONFIDENCE</th>
           </tr>
         </thead>
@@ -1004,7 +1033,7 @@ if __name__ == "__main__":
     squads   = load("wc_squads.json") or {}
     nat_agg  = load("national_stats_agg.json") or {}
 
-    updated = datetime.now(timezone.utc).strftime("%d %b %Y · %H:%M UTC")
+    updated = datetime.now(AEST).strftime("%d %b %Y · %H:%M AEST")
     nat_cov = len(nat_agg)
     print(f"  Events: {len(events)}, Teams with nat stats: {nat_cov}")
 
