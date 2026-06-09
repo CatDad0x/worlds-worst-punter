@@ -285,9 +285,19 @@ def get_nat_stats(name, team, nat_agg):
             return s
     return None
 
-def confidence(has_nat, edge, team_prob_known):
-    if has_nat and team_prob_known and abs(edge) >= 1.0: return "High"
-    if has_nat or (team_prob_known and abs(edge) >= 0.5): return "Medium"
+def confidence(has_nat, edge, team_prob_known, has_sb):
+    """
+    Data quality score — how much independent evidence backs this prediction.
+    High  = national stats + StatsBomb timing + team win probability all available
+    Medium = some independent data (national stats or StatsBomb timing)
+    Low   = bookie-only — we're just reweighting their own numbers
+    """
+    score = 0
+    if has_nat:         score += 2   # international SOT/90 data
+    if has_sb:          score += 2   # StatsBomb shot timing data
+    if team_prob_known: score += 1   # team win probability (h2h)
+    if score >= 4: return "High"
+    if score >= 2: return "Medium"
     return "Low"
 
 # ── STEP 1: Team first-SOT probability ─────────────────────────────────────
@@ -490,7 +500,7 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
         p["bm_pct"]    = round(p["bm_lam"] / tb * 100, 1) if tb > 0 else 0
         p["model_pct"] = round(p["model_lam_final"] / tm * 100, 1) if tm > 0 else 0
         p["edge"]      = round(p["model_pct"] - p["bm_pct"], 1)
-        p["conf"]      = confidence(p["has_nat"], p["edge"], team_known)
+        p["conf"]      = confidence(p["has_nat"], p["edge"], team_known, p.get("has_sb", False))
 
     players.sort(key=lambda x: x["model_pct"], reverse=True)
     return players
@@ -504,9 +514,15 @@ def edge_pill(edge):
     return f'<span class="epill {cls}">{lbl}</span>'
 
 def conf_badge(c):
-    cls = {"High":"conf-hi","Medium":"conf-med","Low":"conf-lo"}.get(c,"conf-lo")
+    cls  = {"High":"conf-hi","Medium":"conf-med","Low":"conf-lo"}.get(c,"conf-lo")
     icon = {"High":"✦","Medium":"◉","Low":"○"}.get(c,"○")
-    return f'<span class="cbadge {cls}">{icon} {c}</span>'
+    lbl  = {"High":"✦ Rich data","Medium":"◉ Some data","Low":"○ Bookie only"}.get(c,"○ Bookie only")
+    tip  = {
+        "High":   "National stats + shot timing data + team win probability all available",
+        "Medium": "Some independent data (national stats or shot timing)",
+        "Low":    "Bookmaker data only — we're reweighting their own numbers. Less reliable.",
+    }.get(c, "")
+    return f'<span class="cbadge {cls}" title="{tip}">{lbl}</span>'
 
 def fmt_date(iso):
     try:
@@ -617,7 +633,7 @@ def match_cards(games):
               <th class="th-b">BOOKIE</th>
               <th>EDGE <span class="th-info">ⓘ</span></th>
               <th>ODDS</th>
-              <th>CONFIDENCE</th>
+              <th title="Data Quality: how much independent evidence backs this prediction. High = national stats + shot timing data. Low = bookmaker data only.">DATA ⓘ</th>
             </tr>
           </thead>
           <tbody>
@@ -939,7 +955,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
             <th class="th-b">BOOKIE</th>
             <th>EDGE ⓘ</th>
             <th>ODDS</th>
-            <th>CONFIDENCE</th>
+            <th title="Data Quality: how much independent evidence backs this prediction. High = national stats + shot timing data. Low = bookmaker data only.">DATA ⓘ</th>
           </tr>
         </thead>
         <tbody>
@@ -954,7 +970,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
       <button class="ftab active" onclick="filterMatches('all',this)"><span class="fi">📅</span> All Matches</button>
       <button class="ftab" onclick="filterMatches('value',this)"><span class="fi">⭐</span> Value Only</button>
       <button class="ftab" onclick="filterMatches('live',this)"><span class="fi">📡</span> With Live Odds</button>
-      <button class="ftab" onclick="filterMatches('high',this)"><span class="fi">🛡</span> High Confidence</button>
+      <button class="ftab" onclick="filterMatches('high',this)"><span class="fi">✦</span> Rich Data</button>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" placeholder="Search player or team..." oninput="searchMatches(this.value)">
