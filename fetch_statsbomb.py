@@ -158,10 +158,13 @@ def build_player_timing_stats(all_shots_by_match):
     return result
 
 def run():
-    # WC 2022 + WC 2018
+    # Recent competitions — past ~1-2 years (international + top club)
     competitions = [
-        (43, 106, "WC 2022"),
-        (43, 3,   "WC 2018"),
+        (43,  106, "WC 2022"),           # World Cup 2022
+        (55,  282, "UEFA Euro 2024"),    # Euro 2024
+        (223, 282, "Copa America 2024"), # Copa America 2024
+        (1267,107, "AFCON 2023"),        # African Cup of Nations 2023
+        (9,   281, "Bundesliga 23/24"),  # Top club league 2023/24
     ]
 
     all_shots_by_match = []
