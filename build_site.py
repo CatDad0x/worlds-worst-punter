@@ -675,7 +675,7 @@ def build_html(games, updated, nat_cov, total, with_odds, sb_players=0):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>World's Worst Punter · First Shot On Target Edge Finder</title>
+<title>David Rowley Best Punter · First Shot On Target Edge Finder</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#080d18;color:#e2e8f0;min-height:100vh;font-size:12px}}
@@ -1015,7 +1015,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
     <div>
       <div class="site-title">
         <span class="wc">WC 2026</span>&nbsp;
-        <span class="rest desk-only">World's Worst Punter's <span class="accent">First Shot On Target Edge Finder</span></span>
+        <span class="rest desk-only">David Rowley Best Punter's<span class="accent">First Shot On Target Edge Finder</span></span>
         <span class="mob-only" style="color:#f1f5f9;font-weight:800">First Shot <span class="accent">Edge Finder</span></span>
       </div>
       <div class="site-subtitle desk-only">Cat Dad Model probabilities vs bookmaker-implied odds for every group-stage match.</div>
