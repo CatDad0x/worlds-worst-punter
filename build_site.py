@@ -252,6 +252,30 @@ def get_squad_pos(name, team, squads):
             return p.get("position", "Unknown")
     return "Unknown"
 
+def get_statsbomb_timing(player_name, sb_data):
+    """
+    Look up StatsBomb WC shot timing data for a player.
+    Returns early_sot_pct_15, avg_first_sot_min, sot_per_game or None.
+    """
+    nl = _norm(player_name)
+    best = None
+    best_matches = 0
+    for key, v in sb_data.items():
+        kname = _norm(v.get("player", ""))
+        if kname == nl:
+            if v["matches"] > best_matches:
+                best = v
+                best_matches = v["matches"]
+        elif nl and kname and (nl in kname or kname in nl):
+            # partial — only use if longer match
+            parts_nl = set(nl.split())
+            parts_k  = set(kname.split())
+            overlap  = len(parts_nl & parts_k)
+            if overlap >= 2 and v["matches"] > best_matches:
+                best = v
+                best_matches = v["matches"]
+    return best
+
 def get_nat_stats(name, team, nat_agg):
     team_data = nat_agg.get(team, {})
     nl = name.lower()
@@ -312,7 +336,7 @@ def get_team_first_sot_probs(event_odds, home, away):
         return 0.5, 0.5, total_line, False
 
 # ── STEP 2: Player first-SOT within their team ─────────────────────────────
-def build_predictions(event_odds, home, away, nat_agg, squads):
+def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
     """
     Two-step model:
       P(player first SOT) = P(team first SOT) × P(player | team first SOT)
@@ -385,7 +409,20 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
 
         # --- Early-game tendency (15%) ---
         # Curated list of high-press early shooters
-        early_mult = 1.15 if name in EARLY_SHOOTERS else 1.0
+        # --- Early-game tendency (15%) ---
+        # Use StatsBomb WC shot timing data if available, else fall back to curated list
+        sb_timing = get_statsbomb_timing(name, sb_data) if sb_data else None
+        if sb_timing and sb_timing.get("matches", 0) >= 2:
+            # Data-driven: use % SOT in first 15 mins
+            # Average early SOT% across all players is ~20%
+            # We scale: 0% early = 0.7x, 20% = 1.0x, 40% = 1.3x, 60%+ = 1.5x
+            early_pct = sb_timing.get("early_sot_pct_15", 0.2)
+            early_mult = 0.7 + (early_pct / 0.4) * 0.6  # linear scale
+            early_mult = min(max(early_mult, 0.5), 1.6)  # clamp 0.5-1.6
+            has_sb = True
+        else:
+            early_mult = 1.15 if name in EARLY_SHOOTERS else 1.0
+            has_sb = False
 
         # --- Set piece / FK (5%) ---
         fk_mult = 1.12 if name in FK_SPECIALISTS else 1.0
@@ -406,7 +443,10 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
             "bm_lam": bm_lam, "model_lam": model_lam,
             "has_nat": has_nat, "nat_apps": nat_apps, "nat_sot": nat_sot,
             "is_fk": name in FK_SPECIALISTS,
-            "is_early": name in EARLY_SHOOTERS,
+            "is_early": name in EARLY_SHOOTERS or has_sb,
+            "has_sb": has_sb,
+            "sb_early_pct": sb_timing.get("early_sot_pct_15") if sb_timing else None,
+            "sb_avg_first_sot": sb_timing.get("avg_first_sot_min") if sb_timing else None,
             "injured": injured,
             "team": team, "is_home": is_home,
         })
@@ -589,7 +629,7 @@ def match_cards(games):
     </div>""")
     return "\n".join(cards)
 
-def build_html(games, updated, nat_cov, total, with_odds):
+def build_html(games, updated, nat_cov, total, with_odds, sb_players=0):
     be_rows = best_edges_rows(games)
     mcards  = match_cards(games)
     nat_pct = round(nat_cov / 48 * 100)
@@ -981,6 +1021,13 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
           <div class="cov-sub">{with_odds} / {total} · publishes 48–72h before kickoff</div>
         </div>
       </div>
+      <div class="cov-item">
+        {donut(min(100, round(sb_players / 7)), "#8b5cf6")}
+        <div>
+          <div class="cov-label">Shot Timing Data</div>
+          <div class="cov-sub">{sb_players} players · WC 2018 + 2022</div>
+        </div>
+      </div>
     </div>
 
     <!-- Edge Legend -->
@@ -1162,7 +1209,7 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
         <h3>⚠️ What This Model Doesn't Do (Yet)</h3>
         <ul>
           <li><strong>Confirmed lineups</strong> — we don't yet factor in whether a player is starting. A high-probability player who's on the bench is worthless. Always check team news before betting.</li>
-          <li><strong>Shot timing data</strong> — we don't yet have per-player data on what minute they typically shoot. This is the biggest gap. Coming in v2.</li>
+          <li><strong>Shot timing data</strong> — ✅ Now integrated from StatsBomb WC 2018 + 2022 event data. Players with real early-shot % data get a data-driven timing multiplier.</li>
           <li><strong>Opponent defensive profile</strong> — we don't yet adjust for how many early SOTs each opponent concedes. Coming in v2.</li>
           <li>Positive edge does not guarantee profit. This is a tool, not a guarantee.</li>
         </ul>
@@ -1181,16 +1228,18 @@ if __name__ == "__main__":
     all_odds = load("all_odds.json") or {}
     squads   = load("wc_squads.json") or {}
     nat_agg  = load("national_stats_agg.json") or {}
+    sb_data  = load("statsbomb_shot_timing.json") or {}
 
     updated = datetime.now(AEST).strftime("%d %b %Y · %H:%M AEST")
     nat_cov = len(nat_agg)
-    print(f"  Events: {len(events)}, Teams with nat stats: {nat_cov}")
+    sb_players = len(sb_data)
+    print(f"  Events: {len(events)}, Nat stat teams: {nat_cov}, StatsBomb players: {sb_players}")
 
     games = []
     for event in sorted(events, key=lambda e: e["commence_time"]):
         eid = event["id"]
         home, away = event["home_team"], event["away_team"]
-        players = build_predictions(all_odds.get(eid,{}), home, away, nat_agg, squads)
+        players = build_predictions(all_odds.get(eid,{}), home, away, nat_agg, squads, sb_data)
         nat_c = sum(1 for p in players[:5] if p.get("has_nat"))
         games.append({
             "id": eid, "home": home, "away": away,
@@ -1207,6 +1256,6 @@ if __name__ == "__main__":
     odds_pct = round(with_odds / total * 100) if total else 0
     print(f"  {total} games, {with_odds} with odds")
 
-    html = build_html(games, updated, nat_cov, total, with_odds)
+    html = build_html(games, updated, nat_cov, total, with_odds, sb_players)
     with open("index.html","w") as f: f.write(html)
     print("Built → index.html")
