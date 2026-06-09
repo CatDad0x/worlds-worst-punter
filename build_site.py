@@ -160,10 +160,21 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
         model_lam = comb_lam * timing * fk_boost
         is_fk = name in FK_SPECIALISTS
 
+        # Determine team by checking squad + nat stats
+        team = away  # default
+        nl = name.lower()
+        for p2 in squads.get(home, []):
+            if nl in p2["name"].lower() or p2["name"].lower() in nl:
+                team = home; break
+        else:
+            if get_nat_stats(name, home, nat_agg):
+                team = home
+
         players.append({
             "name": name, "pos": pos, "price": bi["price"], "bm": bi["bm"],
             "bm_lam": bm_lam, "model_lam": model_lam, "has_nat": has_nat,
             "nat_apps": nat_apps, "nat_sot": nat_sot, "is_fk": is_fk,
+            "team": team,
         })
 
     if not players: return []
@@ -231,7 +242,7 @@ def best_edges_rows(all_games):
                   <div class="avatar" style="background:{col}">{ini}</div>
                   <div>
                     <div class="be-name">{p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""}</div>
-                    <div class="be-country">{COUNTRY_FLAGS.get(p["home"],"")} {p["home"]}</div>
+                    <div class="be-country">{COUNTRY_FLAGS.get(p.get("team", p["home"]),"")} {p.get("team", p["home"])}</div>
                   </div>
                 </div>
               </td>
@@ -256,7 +267,7 @@ def match_player_rows(players):
         med = f'<span class="medal">{medals[i]}</span>' if medals[i] else f'<span class="rank-sm">{i+1}</span>'
         rows.append(f"""              <tr>
                 <td>{med}</td>
-                <td class="td-pname">{p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""}</td>
+                <td class="td-pname"><span class="p-flag">{COUNTRY_FLAGS.get(p.get("team",""),"")}</span> {p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""}</td>
                 <td class="td-model">{p["model_pct"]}%</td>
                 <td class="td-bm">{p["bm_pct"]}%</td>
                 <td>{edge_pill(p["edge"])}</td>
@@ -445,6 +456,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .medal{{font-size:.85rem}}
 .rank-sm{{display:inline-flex;width:16px;height:16px;background:#1a2540;border-radius:50%;align-items:center;justify-content:center;font-size:.58rem;color:#64748b;font-weight:700}}
 .td-pname{{font-weight:600;color:#f1f5f9}}
+.p-flag{{font-size:.9rem;margin-right:2px}}
 .no-data{{text-align:center;color:#4b5563;padding:16px!important;font-style:italic;font-size:.72rem}}
 .mfootnote{{color:#2a3a5c;font-size:.58rem;margin-top:9px;padding-top:7px;border-top:1px solid #111d30;line-height:1.6}}
 .mfootnote sub{{font-size:.54rem;vertical-align:sub}}
@@ -508,6 +520,37 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .leg-range{{color:#4b5563;font-size:.6rem;margin-left:auto}}
 
 .disclaimer{{background:#1a2540;border:1px solid #2a3a5c;border-left:3px solid #3b82f6;border-radius:5px;padding:8px 10px;margin-top:7px;color:#64748b;font-size:.62rem;line-height:1.6}}
+
+/* ── MODAL ── */
+.modal-overlay{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;padding:20px}}
+.modal-overlay.open{{display:flex}}
+.modal{{background:#0f1929;border:1px solid #2a3a5c;border-radius:14px;width:100%;max-width:580px;max-height:88vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,.6)}}
+.modal-head{{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 14px;border-bottom:1px solid #1a2540;position:sticky;top:0;background:#0f1929;z-index:1}}
+.modal-head h2{{font-size:.95rem;font-weight:800;color:#f1f5f9;display:flex;align-items:center;gap:8px}}
+.modal-close{{width:28px;height:28px;background:#1a2540;border:1px solid #2a3a5c;border-radius:6px;color:#64748b;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;line-height:1}}
+.modal-close:hover{{background:#2a3a5c;color:#f1f5f9}}
+.modal-body{{padding:18px 20px}}
+.modal-section{{margin-bottom:20px}}
+.modal-section:last-child{{margin-bottom:0}}
+.modal-section h3{{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:#22c55e;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}}
+.modal-section p,.modal-section li{{font-size:.78rem;color:#94a3b8;line-height:1.75}}
+.modal-section ul{{padding-left:16px;margin-top:6px}}
+.modal-section li{{margin-bottom:4px}}
+.modal-section strong{{color:#f1f5f9}}
+.modal-formula{{background:#080d18;border:1px solid #1a2540;border-radius:7px;padding:12px 14px;font-family:monospace;font-size:.75rem;color:#22c55e;margin:10px 0;line-height:1.8}}
+.modal-factor{{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1a2540}}
+.modal-factor:last-child{{border-bottom:none}}
+.mf-circle{{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;margin-top:1px}}
+.mf-title{{font-weight:700;font-size:.8rem;color:#f1f5f9;margin-bottom:3px}}
+.mf-desc{{font-size:.72rem;color:#64748b;line-height:1.6}}
+.modal-divider{{border:none;border-top:1px solid #1a2540;margin:16px 0}}
+
+/* ── BEST EDGES COLLAPSE ── */
+.be-toggle{{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}}
+.be-chev{{color:#64748b;font-size:.75rem;transition:transform .2s}}
+.be-chev.closed{{transform:rotate(-90deg)}}
+.be-body{{overflow:hidden;transition:max-height .25s ease}}
+.be-body.collapsed{{display:none}}
 
 @media(max-width:900px){{
   .sidebar{{display:none}}
@@ -574,8 +617,12 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
           <span class="ico">📊</span> Best Edges
           <span class="sec-subtitle">Top value opportunities across all matches</span>
         </div>
-        <a class="view-all" href="#all-matches">View all matches →</a>
+        <div class="be-toggle" onclick="toggleBE()">
+          <a class="view-all" href="#all-matches" onclick="event.stopPropagation()">View all matches →</a>
+          <span style="margin-left:6px;color:#64748b;font-size:.67rem" id="be-label">▲ Collapse</span>
+        </div>
       </div>
+      <div class="be-body" id="be-body">
       <table class="be-table" style="margin-top:10px">
         <thead>
           <tr>
@@ -591,6 +638,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 {be_rows}
         </tbody>
       </table>
+      </div>
     </div>
 
     <!-- FILTER BAR -->
@@ -636,7 +684,7 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
         <div class="mi-circle mi-amber">FK</div>
         <div><div class="mi-label">Free Kick Specialist</div><div class="mi-sub">Known FK takers +12% (direct shot from set pieces)</div></div>
       </div>
-      <div class="show-details">Show full details ▾</div>
+      <div class="show-details" onclick="openModal()">Show full details ▾</div>
     </div>
 
     <!-- Model Status -->
@@ -687,6 +735,28 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 
 <script>
 // Toggle match cards
+// ── MODAL ──
+function openModal() {{
+  document.getElementById('model-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}}
+function closeModal() {{
+  document.getElementById('model-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}}
+document.addEventListener('keydown', function(e) {{ if(e.key==='Escape') closeModal(); }});
+
+// ── BEST EDGES COLLAPSE ──
+var beOpen = true;
+function toggleBE() {{
+  beOpen = !beOpen;
+  var body = document.getElementById('be-body');
+  var lbl  = document.getElementById('be-label');
+  body.classList.toggle('collapsed', !beOpen);
+  lbl.textContent = beOpen ? '▲ Collapse' : '▼ Expand';
+}}
+
+// ── MATCH CARDS ──
 function tog(id) {{
   var c = document.getElementById('mc-'+id);
   var ch = document.getElementById('chev-'+id);
@@ -728,6 +798,89 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
   if(n<3){{ var id=c.id.replace('mc-',''); tog(id); n++; }}
 }});
 </script>
+
+<!-- ── MODEL DETAIL MODAL ── -->
+<div class="modal-overlay" id="model-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>🐱 How the Cat Dad Model Works</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <h3>🎯 What We're Predicting</h3>
+        <p>For each WC 2026 group stage match, we estimate which player is most likely to have the <strong>first shot on target</strong> — a specific prop betting market offered by bookmakers like William Hill and Unibet.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3>⚙️ The Core Formula</h3>
+        <p>We model shots as a <strong>Poisson process</strong> — a way to describe random events happening over time. Each player has a rate λ (lambda) representing how many shots on target they're expected to take per game. The player who shoots fastest on average is most likely to be first.</p>
+        <div class="modal-formula">
+          P(player X is first SOT) = λ<sub>X</sub> / Σλ<sub>all players</sub>
+        </div>
+        <p>So if Son has λ=1.33 and all other players combined have Σλ=18.5, his first-SOT probability is 1.33/18.5 = <strong>7.2%</strong>.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3>📊 The Four Factors</h3>
+        <div class="modal-factor">
+          <div class="mf-circle mi-green">60%</div>
+          <div>
+            <div class="mf-title">National Team SOT Rate</div>
+            <div class="mf-desc">We pull each player's shots on target per 90 minutes across <strong>4 years of international fixtures</strong> (2022–2025: World Cup, UEFA Nations League, qualifiers, friendlies). National stats are prioritised over club stats because players operate in different tactical systems for their country — a striker who shoots 3× per game at club level might play wider or deeper for their national team.</div>
+          </div>
+        </div>
+        <div class="modal-factor">
+          <div class="mf-circle mi-blue">40%</div>
+          <div>
+            <div class="mf-title">Bookmaker Implied Rate</div>
+            <div class="mf-desc">William Hill's "Over 0.5 shots on target" odds are converted into a Poisson rate using <strong>λ = −ln(1 − p)</strong> where p is the implied probability (1/odds). This fills gaps where we have no stat data and grounds the model in market consensus — bookmakers have access to team news, form data, and injury information we don't.</div>
+          </div>
+        </div>
+        <div class="modal-factor">
+          <div class="mf-circle mi-purple">⚡</div>
+          <div>
+            <div class="mf-title">Position Timing Adjustment</div>
+            <div class="mf-desc">The first-shot market is about <em>timing</em>, not just volume. Forwards and attackers tend to attempt shots in the opening minutes when teams press high. Defenders rarely shoot early. We apply a multiplier: <strong>Attackers/Forwards +18%</strong>, Midfielders neutral, Defenders −20%, Goalkeepers −80%.</div>
+          </div>
+        </div>
+        <div class="modal-factor">
+          <div class="mf-circle mi-amber">FK</div>
+          <div>
+            <div class="mf-title">Free Kick Specialist Boost</div>
+            <div class="mf-desc">Players who regularly take free kicks get a <strong>+12% boost</strong>. A direct free kick in a good position is one of the most common sources of early shots on target in international football. We maintain a curated list of known FK takers per national team (e.g. Son, Griezmann, Bruno Fernandes, Messi, De Bruyne).</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <div class="modal-section">
+        <h3>📐 Edge Calculation</h3>
+        <p>The <strong>Edge</strong> column shows where our model disagrees with the bookmaker's implied ranking:</p>
+        <ul>
+          <li><strong>Edge = Cat Dad Model % − Bookmaker Implied %</strong></li>
+          <li><span style="color:#22c55e">Green (positive edge)</span> — our model rates this player higher than the market. The bookmaker may be undervaluing them relative to their international shot rate or set-piece involvement.</li>
+          <li><span style="color:#ef4444">Red (negative edge)</span> — the market rates them higher than we do. Consider fading them in the first-shot market.</li>
+        </ul>
+        <p style="margin-top:8px">Positive edge does not guarantee a winning bet — it indicates potential value worth investigating.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3>⚠️ Limitations</h3>
+        <ul>
+          <li>National team stats are <strong>sparse</strong> — most players have 5–15 appearances. Small samples create noise.</li>
+          <li>We do not currently model <strong>expected lineups</strong> — a player listed may not start.</li>
+          <li>Bookmaker odds reflect the closest available market to "first SOT" — not the exact market.</li>
+          <li>FK specialist list is manually curated and may be incomplete.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>"""
 
