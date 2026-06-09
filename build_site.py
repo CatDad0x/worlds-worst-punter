@@ -945,10 +945,11 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   .view-all{{font-size:.62rem;padding:4px 8px}}
 
   /* BE table — fix rank/player spacing */
-  .be-table th:nth-child(1),.be-row td:nth-child(1){{width:28px;padding:8px 4px 8px 8px}}
-  .be-table th:nth-child(2),.be-row td:nth-child(2){{width:auto;padding-left:4px}}
-  .be-table th:nth-child(4),.be-row td:nth-child(4){{width:95px;text-align:right;padding-right:8px}}
+  .be-table th:nth-child(1),.be-row td:nth-child(1){{width:28px;padding:8px 6px 8px 8px}}
+  .be-table th:nth-child(2),.be-row td:nth-child(2){{width:auto;padding-left:0}}
+  .be-table th:nth-child(4),.be-row td:nth-child(4){{width:86px;text-align:right;padding-right:8px;overflow:hidden}}
   .be-table th:nth-child(4){{font-size:.58rem}}
+  .be-row td:nth-child(4) .mob-edge .epill{{max-width:82px;overflow:hidden;font-size:.58rem}}
 
   /* Best Edges table — rank | player | model+edge only */
   .be-table th:nth-child(3),.be-row td:nth-child(3),
