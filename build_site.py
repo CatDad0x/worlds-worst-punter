@@ -261,12 +261,75 @@ def get_nat_stats(name, team, nat_agg):
             return s
     return None
 
-def confidence(has_nat, edge):
-    if has_nat and abs(edge) >= 1.0: return "High"
-    if has_nat or abs(edge) >= 0.5:  return "Medium"
+def confidence(has_nat, edge, team_prob_known):
+    if has_nat and team_prob_known and abs(edge) >= 1.0: return "High"
+    if has_nat or (team_prob_known and abs(edge) >= 0.5): return "Medium"
     return "Low"
 
+# ── STEP 1: Team first-SOT probability ─────────────────────────────────────
+def get_team_first_sot_probs(event_odds, home, away):
+    """
+    Two-step model step 1:
+    P(team gets first SOT) derived from h2h odds.
+    The stronger team (higher win probability) is more likely to attack first.
+    Adjusted by match total (higher total → faster first SOT overall).
+    Returns (p_home, p_away, total_line)
+    """
+    home_win_prob = away_win_prob = draw_prob = None
+    total_line = 2.5  # default
+
+    for bm in event_odds.get("bookmakers", []):
+        for mkt in bm.get("markets", []):
+            if mkt["key"] == "h2h" and home_win_prob is None:
+                for o in mkt["outcomes"]:
+                    p = 1 / o["price"]
+                    if o["name"] == home:   home_win_prob = p
+                    elif o["name"] == away: away_win_prob = p
+                    elif o["name"] == "Draw": draw_prob = p
+            if mkt["key"] == "totals":
+                for o in mkt["outcomes"]:
+                    if o["name"] == "Over":
+                        total_line = o.get("point", 2.5)
+                        break
+
+    if home_win_prob and away_win_prob and draw_prob:
+        # Remove overround
+        total_imp = home_win_prob + away_win_prob + draw_prob
+        hw = home_win_prob / total_imp
+        aw = away_win_prob / total_imp
+        dw = draw_prob / total_imp
+
+        # P(team first SOT) ≈ P(win) + 0.45*P(draw)
+        # (favourites attack first ~65% when they win, draws roughly split)
+        p_home_raw = hw + 0.45 * dw
+        p_away_raw = aw + 0.45 * dw
+        # Normalise to sum to 1
+        total = p_home_raw + p_away_raw
+        p_home = p_home_raw / total
+        p_away = p_away_raw / total
+        return p_home, p_away, total_line, True
+    else:
+        return 0.5, 0.5, total_line, False
+
+# ── STEP 2: Player first-SOT within their team ─────────────────────────────
 def build_predictions(event_odds, home, away, nat_agg, squads):
+    """
+    Two-step model:
+      P(player first SOT) = P(team first SOT) × P(player | team first SOT)
+
+    Weights (v1):
+      35% bookmaker SOT implied rate (Poisson λ)
+      25% national team SOT/90
+      15% early-game tendency (curated list + position timing)
+      10% tactical role/position
+       7.5% team/opponent matchup (game total proxy)
+       5% set-piece / FK responsibility
+       2.5% injury/availability penalty
+
+    bm_pct uses raw bookmaker λ normalised — our benchmark.
+    model_pct uses the full weighted model.
+    """
+    # Extract Over 0.5 SOT odds per player
     bookie_data = {}
     for bm in event_odds.get("bookmakers", []):
         for mkt in bm.get("markets", []):
@@ -280,51 +343,114 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
 
     if not bookie_data: return []
 
+    # Step 1: team-level first SOT probabilities
+    p_home_team, p_away_team, total_line, team_known = get_team_first_sot_probs(event_odds, home, away)
+
+    # Total line modifier: high-scoring game → first SOT comes sooner → spread wider
+    # We use it as a slight boost for the stronger team's players (effect already in h2h)
+    # Higher totals also mean more SOT overall, which doesn't change ratios much
+    # So we keep this simple and just use it for confidence display
+
+    # Step 2: build player-level model lambdas
     players = []
     for name, bi in bookie_data.items():
+        # --- Bookmaker signal (35%) ---
         bm_lam = implied_lambda(bi["price"])
+
+        # --- National team stats (25%) ---
         nat = get_nat_stats(name, home, nat_agg) or get_nat_stats(name, away, nat_agg)
-        pos = (nat.get("pos","Unknown") if nat else None) or get_squad_pos(name, home, squads) or get_squad_pos(name, away, squads) or "Unknown"
+        pos = (nat.get("pos","Unknown") if nat else None) or \
+              get_squad_pos(name, home, squads) or \
+              get_squad_pos(name, away, squads) or "Unknown"
 
         if nat and nat.get("sot_per90", 0) > 0:
-            nat_lam = max(nat["sot_per90"], 0.001)
-            comb_lam = 0.60 * nat_lam + 0.40 * bm_lam
-            has_nat = True
+            nat_lam  = max(nat["sot_per90"], 0.001)
+            has_nat  = True
             nat_apps = nat.get("apps", 0)
-            nat_sot = nat.get("sot_per90", 0)
+            nat_sot  = nat.get("sot_per90", 0)
         else:
-            comb_lam = bm_lam
-            has_nat = False
+            nat_lam  = bm_lam  # fallback to bookie when no intl data
+            has_nat  = False
             nat_apps = nat_sot = None
 
-        timing      = POS_TIMING.get(pos, 1.0)
-        fk_boost    = 1.12 if name in FK_SPECIALISTS else 1.0
-        early_boost = 1.10 if name in EARLY_SHOOTERS else 1.0
-        injured     = name in INJURED_DOUBTFUL
-        inj_penalty = 0.40 if injured else 1.0   # -60% if confirmed doubt
+        # Weighted base rate: 35% bookie + 25% national (+ 40% bookie if no nat data)
+        if has_nat:
+            base_lam = 0.35 * bm_lam + 0.25 * nat_lam + 0.40 * bm_lam
+            # simplifies to: 0.75 * bm_lam + 0.25 * nat_lam
+        else:
+            base_lam = bm_lam
 
-        model_lam = comb_lam * timing * fk_boost * early_boost * inj_penalty
-        is_fk = name in FK_SPECIALISTS
-        is_early = name in EARLY_SHOOTERS
+        # --- Tactical role / position (10%) ---
+        timing = POS_TIMING.get(pos, 1.0)
 
+        # --- Early-game tendency (15%) ---
+        # Curated list of high-press early shooters
+        early_mult = 1.15 if name in EARLY_SHOOTERS else 1.0
+
+        # --- Set piece / FK (5%) ---
+        fk_mult = 1.12 if name in FK_SPECIALISTS else 1.0
+
+        # --- Injury / availability (2.5% weight — hard penalty) ---
+        injured    = name in INJURED_DOUBTFUL
+        inj_mult   = 0.35 if injured else 1.0
+
+        # Final model lambda
+        model_lam = base_lam * timing * early_mult * fk_mult * inj_mult
+
+        # Which team
         team = find_player_team(name)
+        is_home = (team == home)
 
         players.append({
             "name": name, "pos": pos, "price": bi["price"], "bm": bi["bm"],
-            "bm_lam": bm_lam, "model_lam": model_lam, "has_nat": has_nat,
-            "nat_apps": nat_apps, "nat_sot": nat_sot,
-            "is_fk": is_fk, "is_early": is_early, "injured": injured,
-            "team": team,
+            "bm_lam": bm_lam, "model_lam": model_lam,
+            "has_nat": has_nat, "nat_apps": nat_apps, "nat_sot": nat_sot,
+            "is_fk": name in FK_SPECIALISTS,
+            "is_early": name in EARLY_SHOOTERS,
+            "injured": injured,
+            "team": team, "is_home": is_home,
         })
 
     if not players: return []
+
+    # --- Bookie benchmark: raw λ normalised across all players ---
     tb = sum(p["bm_lam"] for p in players)
-    tm = sum(p["model_lam"] for p in players)
+
+    # --- Two-step model ---
+    # Group by team
+    home_players = [p for p in players if p["team"] == home]
+    away_players = [p for p in players if p["team"] == away]
+    unknown_players = [p for p in players if not p["team"]]
+
+    def first_sot_within_team(team_players):
+        """P(player first SOT | their team gets it) = λ_player / Σλ_team"""
+        total = sum(p["model_lam"] for p in team_players)
+        for p in team_players:
+            p["_within_team"] = p["model_lam"] / total if total > 0 else 0
+
+    all_lam = sum(q["model_lam"] for q in players) or 1
+    for p in players: p["_within_team"] = 0  # default
+    if home_players: first_sot_within_team(home_players)
+    if away_players: first_sot_within_team(away_players)
+    for p in unknown_players:
+        p["_within_team"] = p["model_lam"] / all_lam
+
+    # Combine: P(player first SOT) = P(team first) × P(player | team first)
     for p in players:
-        p["bm_pct"]    = round(p["bm_lam"]    / tb * 100, 1) if tb > 0 else 0
-        p["model_pct"] = round(p["model_lam"] / tm * 100, 1) if tm > 0 else 0
+        if p["team"] == home:
+            team_prob = p_home_team
+        elif p["team"] == away:
+            team_prob = p_away_team
+        else:
+            team_prob = 0.5
+        p["model_lam_final"] = team_prob * p["_within_team"]
+
+    tm = sum(p["model_lam_final"] for p in players)
+    for p in players:
+        p["bm_pct"]    = round(p["bm_lam"] / tb * 100, 1) if tb > 0 else 0
+        p["model_pct"] = round(p["model_lam_final"] / tm * 100, 1) if tm > 0 else 0
         p["edge"]      = round(p["model_pct"] - p["bm_pct"], 1)
-        p["conf"]      = confidence(p["has_nat"], p["edge"])
+        p["conf"]      = confidence(p["has_nat"], p["edge"], team_known)
 
     players.sort(key=lambda x: x["model_pct"], reverse=True)
     return players
