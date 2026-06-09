@@ -657,9 +657,16 @@ def build_html(games, updated, nat_cov, total, with_odds, sb_players=0):
 
     # Donut SVG helper
     def donut(pct, color):
-        r = 16; c = 20; circ = 2*3.14159*r
-        dash = pct/100*circ
-        return f'<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="{c}" cy="{c}" r="{r}" fill="none" stroke="#1e2d3d" stroke-width="4"/><circle cx="{c}" cy="{c}" r="{r}" fill="none" stroke="{color}" stroke-width="4" stroke-dasharray="{dash:.1f} {circ:.1f}" stroke-dashoffset="{circ/4:.1f}" stroke-linecap="round"/><text x="{c}" y="{c}" text-anchor="middle" dy=".35em" fill="{color}" font-size="9" font-weight="700">{pct}%</text></svg>'
+        r = 16; c = 20; circ = 2 * 3.14159 * r
+        # At 100%, use slightly less than full circ to avoid gap at join
+        dash = min(pct / 100 * circ, circ - 0.1)
+        gap  = max(circ - dash, 0.1)
+        return (f'<svg width="44" height="44" viewBox="0 0 44 44">'
+                f'<circle cx="22" cy="22" r="{r}" fill="none" stroke="#1e2d3d" stroke-width="4"/>'
+                f'<circle cx="22" cy="22" r="{r}" fill="none" stroke="{color}" stroke-width="4" '
+                f'stroke-dasharray="{dash:.2f} {gap:.2f}" stroke-dashoffset="{circ/4:.2f}" stroke-linecap="round"/>'
+                f'<text x="22" y="22" text-anchor="middle" dy=".35em" fill="{color}" font-size="9" font-weight="800">{pct}%</text>'
+                f'</svg>')
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -842,10 +849,10 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .sb-upd{{color:#4b5563;font-size:.6rem;margin-top:7px}}
 .sb-upd span{{color:#22c55e}}
 
-.cov-item{{display:flex;align-items:center;gap:8px;margin-bottom:9px}}
+.cov-item{{display:flex;align-items:center;gap:8px;margin-bottom:8px}}
 .cov-item:last-child{{margin-bottom:0}}
-.cov-label{{font-size:.67rem;color:#94a3b8;font-weight:600}}
-.cov-sub{{font-size:.6rem;color:#4b5563}}
+.cov-label{{font-size:.66rem;color:#94a3b8;font-weight:600;line-height:1.3}}
+.cov-sub{{font-size:.59rem;color:#4b5563;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 
 .leg-item{{display:flex;align-items:center;gap:7px;padding:4px 0;font-size:.65rem;color:#94a3b8}}
 .leg-dot{{width:9px;height:9px;border-radius:50%;flex-shrink:0}}
@@ -1035,21 +1042,21 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
         {donut(nat_pct, "#22c55e")}
         <div>
           <div class="cov-label">National Team Stats</div>
-          <div class="cov-sub">{nat_cov} / 48 teams · filling daily</div>
+          <div class="cov-sub">{nat_cov} / 48 teams · 2022–2025</div>
         </div>
       </div>
       <div class="cov-item">
         {donut(odds_pct, "#3b82f6")}
         <div>
           <div class="cov-label">Bookmaker Odds</div>
-          <div class="cov-sub">{with_odds} / {total} · publishes 48–72h before kickoff</div>
+          <div class="cov-sub">{with_odds} / {total} matches · updates daily</div>
         </div>
       </div>
       <div class="cov-item">
         {donut(min(100, round(sb_players / 7)), "#8b5cf6")}
         <div>
           <div class="cov-label">Shot Timing Data</div>
-          <div class="cov-sub">{sb_players} players · WC 2018 + 2022</div>
+          <div class="cov-sub">{sb_players} players · WC 2018 & 2022</div>
         </div>
       </div>
     </div>
