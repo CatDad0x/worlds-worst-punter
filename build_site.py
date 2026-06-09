@@ -509,13 +509,15 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
     players.sort(key=lambda x: x["model_pct"], reverse=True)
     return players
 
-def edge_pill(edge):
-    if edge >= 1.5:  cls,lbl = "e-strong-val", f"+{edge}% Strong"
-    elif edge >= 0.5:cls,lbl = "e-slight-val", f"+{edge}% Slight"
-    elif edge <= -1.5:cls,lbl= "e-strong-fad", f"{edge}% Fade"
-    elif edge <= -0.5:cls,lbl= "e-slight-fad", f"{edge}% Slight"
-    else:             cls,lbl = "e-neutral",    "Neutral"
-    return f'<span class="epill {cls}">{lbl}</span>'
+def edge_pill(edge, short=False):
+    if edge >= 1.5:  cls,lbl,slbl = "e-strong-val", f"+{edge}% Strong", f"+{edge}%"
+    elif edge >= 0.5:cls,lbl,slbl = "e-slight-val", f"+{edge}% Slight", f"+{edge}%"
+    elif edge <= -1.5:cls,lbl,slbl= "e-strong-fad", f"{edge}% Fade",    f"{edge}%"
+    elif edge <= -0.5:cls,lbl,slbl= "e-slight-fad", f"{edge}% Slight",  f"{edge}%"
+    else:             cls,lbl,slbl = "e-neutral",    "Neutral",          "—"
+    if short:
+        return f'<span class="epill {cls}">{slbl}</span>'
+    return f'<span class="epill {cls}"><span class="pill-long">{lbl}</span><span class="pill-short">{slbl}</span></span>'
 
 def conf_badge(c):
     cls  = {"High":"conf-hi","Medium":"conf-med","Low":"conf-lo"}.get(c,"conf-lo")
@@ -576,7 +578,7 @@ def best_edges_rows(all_games):
                 <div class="be-match">{ha} vs {aa}</div>
                 <div class="be-date">{p["date_short"]} · {p["time"]}</div>
               </td>
-              <td class="td-model">{p["model_pct"]}%</td>
+              <td class="td-model">{p["model_pct"]}% <span class="mob-edge">{edge_pill(p["edge"])}</span></td>
               <td class="td-bm">{p["bm_pct"]}%</td>
               <td>{edge_pill(p["edge"])}</td>
               <td><span class="odds-val">{p["price"]:.2f}</span> {bm_html(p["bm"])}</td>
@@ -594,7 +596,7 @@ def match_player_rows(players):
         rows.append(f"""              <tr>
                 <td>{med}</td>
                 <td class="td-pname"><span class="p-flag">{COUNTRY_FLAGS.get(p.get("team",""),"")}</span> {p["name"]} {"<span class='fk-tag'>FK</span>" if p.get("is_fk") else ""} {"<span class='early-tag'>⚡</span>" if p.get("is_early") else ""} {"<span class='inj-tag'>⚠ DOUBT</span>" if p.get("injured") else ""}</td>
-                <td class="td-model">{p["model_pct"]}%</td>
+                <td class="td-model">{p["model_pct"]}% <span class="mob-edge">{edge_pill(p["edge"])}</span></td>
                 <td class="td-bm">{p["bm_pct"]}%</td>
                 <td>{edge_pill(p["edge"])}</td>
                 <td><span class="odds-val">{p["price"]:.2f}</span> {bm_html(p["bm"])}</td>
@@ -738,6 +740,8 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .td-model{{color:#3b82f6;font-weight:800;font-size:.82rem}}
 .td-bm{{color:#f59e0b;font-weight:700;font-size:.77rem}}
 .odds-val{{font-weight:800;color:#f1f5f9;margin-right:3px}}
+.mob-edge{{display:none}}
+.pill-short{{display:none}}
 
 /* ── FK TAG ── */
 .fk-tag{{font-size:.55rem;font-weight:800;background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;padding:1px 4px;border-radius:3px;letter-spacing:.3px;vertical-align:middle}}
@@ -891,15 +895,113 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .be-body{{overflow:hidden;transition:max-height .25s ease}}
 .be-body.collapsed{{display:none}}
 
+/* ── TABLET ── */
 @media(max-width:900px){{
   .sidebar{{display:none}}
-  .kpi{{padding:12px 14px}}
+  .kpi{{padding:10px 12px}}
 }}
+
+/* ── HELPERS ── */
+.mob-only{{display:none}}
+.desk-only{{display:inline}}
+
+/* ── TABLET ── */
+@media(max-width:900px){{
+  .sidebar{{display:none}}
+  .kpi{{padding:10px 12px}}
+}}
+
+/* ── MOBILE ── */
 @media(max-width:600px){{
-  .be-table th:nth-child(3),.be-row td:nth-child(3),
-  .be-table th:nth-child(8),.be-row td:nth-child(8){{display:none}}
+
+  /* Show/hide helpers */
+  .mob-only{{display:inline}}
+  .desk-only{{display:none!important}}
+  .mob-edge{{display:inline-flex!important;margin-left:4px}}
+
+  /* Topbar — single compact line */
+  .topbar{{padding:8px 12px;gap:8px}}
+  .topbar-left{{gap:8px}}
+  .trophy{{font-size:1rem;flex-shrink:0}}
+  .site-title{{font-size:.78rem;font-weight:800;line-height:1.2}}
+
+  /* KPI bar — 3 items, hide date */
   .kpi-bar{{flex-wrap:wrap}}
-  .kpi{{min-width:50%}}
+  .kpi{{flex:1;min-width:33%;padding:8px 10px;gap:6px;border-right:none;border-bottom:1px solid #1a2540}}
+  .kpi:last-child{{display:none}}
+  .kpi-icon{{width:26px;height:26px;font-size:.75rem;flex-shrink:0}}
+  .kpi-n{{font-size:1rem}}
+  .kpi-sub{{font-size:.55rem}}
+  .kpi-sub .dim{{display:none}}
+
+  /* Content */
+  .content{{padding:10px 10px 32px}}
+
+  /* Best Edges — clean header */
+  .be-card > div:first-child{{padding:10px 12px 8px;flex-direction:row;gap:6px;align-items:center;flex-wrap:wrap}}
+  .sec-title{{font-size:.8rem;flex:1}}
+  .sec-subtitle{{display:none}}
+  .be-toggle{{gap:6px}}
+  .view-all{{font-size:.62rem;padding:4px 8px}}
+
+  /* BE table — fix rank/player spacing */
+  .be-table th:nth-child(1),.be-row td:nth-child(1){{width:28px;padding:8px 4px 8px 8px}}
+  .be-table th:nth-child(2),.be-row td:nth-child(2){{width:auto;padding-left:4px}}
+  .be-table th:nth-child(4),.be-row td:nth-child(4){{width:95px;text-align:right;padding-right:8px}}
+  .be-table th:nth-child(4){{font-size:.58rem}}
+
+  /* Best Edges table — rank | player | model+edge only */
+  .be-table th:nth-child(3),.be-row td:nth-child(3),
+  .be-table th:nth-child(5),.be-row td:nth-child(5),
+  .be-table th:nth-child(6),.be-row td:nth-child(6),
+  .be-table th:nth-child(7),.be-row td:nth-child(7),
+  .be-table th:nth-child(8),.be-row td:nth-child(8){{display:none}}
+  .be-table{{font-size:.75rem;table-layout:fixed;width:100%}}
+  .be-table th:nth-child(1){{width:30px}}
+  .be-table th:nth-child(2){{width:auto}}
+  .be-table th:nth-child(4){{width:90px;white-space:nowrap}}
+  .be-row td{{padding:8px 10px;vertical-align:middle}}
+  .rank-circle{{width:18px;height:18px;font-size:.6rem}}
+  .avatar{{width:26px;height:26px;font-size:.6rem;flex-shrink:0}}
+  .be-player{{gap:6px}}
+  .be-name{{font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px;display:block}}
+  .be-country{{font-size:.6rem}}
+  .td-model{{font-size:.82rem;white-space:nowrap}}
+  .epill{{font-size:.62rem;padding:2px 5px}}
+  .pill-long{{display:none}}
+  .pill-short{{display:inline}}
+
+  /* Match card headers */
+  .mcard-header{{padding:10px 12px;gap:4px}}
+  .mteam{{font-size:.78rem}}
+  .mflag{{font-size:.9rem}}
+  .mdate{{font-size:.6rem}}
+  .mbadge{{font-size:.55rem;padding:1px 5px}}
+  .mvs{{font-size:.6rem;padding:2px 4px}}
+
+  /* Match card table — show only: rank | player | model+edge */
+  .mtable th:nth-child(4),.mtable td:nth-child(4),
+  .mtable th:nth-child(5),.mtable td:nth-child(5),
+  .mtable th:nth-child(6),.mtable td:nth-child(6),
+  .mtable th:nth-child(7),.mtable td:nth-child(7){{display:none}}
+  .mtable{{table-layout:fixed;width:100%}}
+  .mtable th:nth-child(1),.mtable td:nth-child(1){{width:32px;padding-right:4px}}
+  .mtable th:nth-child(2),.mtable td:nth-child(2){{width:auto}}
+  .mtable th:nth-child(3),.mtable td:nth-child(3){{width:110px;text-align:right}}
+  .mtable td{{padding:8px 6px;font-size:.78rem}}
+  .td-pname{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;display:block}}
+  .td-model{{text-align:right;white-space:nowrap}}
+  .mcard-body{{padding:0 10px 12px}}
+  .medal{{font-size:.85rem}}
+  .rank-sm{{width:16px;height:16px;font-size:.6rem}}
+
+  /* Filter bar */
+  .filter-bar{{gap:5px;flex-wrap:wrap}}
+  .ftab{{font-size:.62rem;padding:5px 9px;flex-shrink:0}}
+  .filter-btn{{display:none}}
+  .search-wrap{{order:10;min-width:100%;margin-top:2px}}
+  .search-wrap input{{font-size:.7rem;padding:7px 12px 7px 28px}}
+
 }}
 </style>
 </head>
@@ -910,11 +1012,16 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   <div class="topbar-left">
     <span class="trophy">🏆</span>
     <div>
-      <div class="site-title"><span class="wc">WC 2026</span>&nbsp;&nbsp;<span class="rest">World's Worst Punter's <span class="accent">First Shot On Target Edge Finder</span></span></div>
-      <div class="site-subtitle">Cat Dad Model probabilities vs bookmaker-implied odds for every group-stage match.</div>
+      <div class="site-title">
+        <span class="wc">WC 2026</span>&nbsp;
+        <span class="rest desk-only">World's Worst Punter's <span class="accent">First Shot On Target Edge Finder</span></span>
+        <span class="mob-only" style="color:#f1f5f9;font-weight:800">First Shot <span class="accent">Edge Finder</span></span>
+      </div>
+      <div class="site-subtitle desk-only">Cat Dad Model probabilities vs bookmaker-implied odds for every group-stage match.</div>
+      <div class="mob-only" style="color:#64748b;font-size:.6rem;margin-top:2px">Updated {updated}</div>
     </div>
   </div>
-  <div class="topbar-right">
+  <div class="topbar-right desk-only">
     <div>
       <div class="last-upd-label">Last updated</div>
       <div class="last-upd-val">{updated}</div>
