@@ -243,7 +243,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="topbar-right">
     <div>
       <div class="last-upd-label">Last updated</div>
-      <div class="last-upd-val">09 Jun 2026 · 20:01 AEST</div>
+      <div class="last-upd-val">09 Jun 2026 · 20:03 AEST</div>
     </div>
     <div class="refresh-btn" onclick="location.reload()">↻</div>
   </div>
@@ -265,7 +265,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   </div>
   <div class="kpi">
     <div class="kpi-icon amber">🕐</div>
-    <div><div class="kpi-n">09 Jun 2026</div><div class="kpi-sub">Last Updated<br><span class="dim">20:01 AEST</span></div></div>
+    <div><div class="kpi-n">09 Jun 2026</div><div class="kpi-sub">Last Updated<br><span class="dim">20:03 AEST</span></div></div>
   </div>
 </div>
 
@@ -304,7 +304,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">1</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#f59e0b">GM</div>
+                  <div class="avatar" style="background:#ec4899">GM</div>
                   <div>
                     <div class="be-name">Gabriel Martinelli  <span class='early-tag'>⚡EARLY</span> </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -325,7 +325,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">2</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#f59e0b">ES</div>
+                  <div class="avatar" style="background:#06b6d4">ES</div>
                   <div>
                     <div class="be-name">Endrick Felipe Moreira de Sousa   </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -367,7 +367,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">4</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#06b6d4">MC</div>
+                  <div class="avatar" style="background:#f59e0b">MC</div>
                   <div>
                     <div class="be-name">Matheus Cunha   </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -388,7 +388,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">5</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#3b82f6">SG</div>
+                  <div class="avatar" style="background:#f59e0b">SG</div>
                   <div>
                     <div class="be-name">Santiago Gimenez  <span class='early-tag'>⚡EARLY</span> </div>
                     <div class="be-country">🇲🇽 Mexico</div>
@@ -3279,22 +3279,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <!-- How it works -->
     <div class="sb-section">
       <div class="sb-title"><span><span class="sb-ico">🐱</span> How the Cat Dad Model Works</span><span class="sb-toggle">▾</span></div>
-      <p style="color:#64748b;font-size:.63rem;margin-bottom:9px">Four factors combined to estimate which player has the first shot on target.</p>
+      <p style="color:#64748b;font-size:.62rem;margin-bottom:9px">Two-step model: which team shoots first, then which player.</p>
       <div class="model-item">
-        <div class="mi-circle mi-green">60%</div>
-        <div><div class="mi-label">National Team SOT Rate</div><div class="mi-sub">SOT per 90 mins across 2022–2025 intl fixtures</div></div>
+        <div class="mi-circle mi-blue" style="font-size:.55rem">H2H</div>
+        <div><div class="mi-label">Step 1 · Team First SOT</div><div class="mi-sub">Win odds → P(team attacks first)</div></div>
       </div>
       <div class="model-item">
-        <div class="mi-circle mi-blue">40%</div>
-        <div><div class="mi-label">Bookmaker Implied Rate</div><div class="mi-sub">William Hill "Over 0.5 SOT" → Poisson λ</div></div>
+        <div class="mi-circle mi-green" style="font-size:.55rem">SOT</div>
+        <div><div class="mi-label">Step 2 · Player Shot Rate</div><div class="mi-sub">35% bookie λ + 25% intl SOT/90</div></div>
       </div>
       <div class="model-item">
         <div class="mi-circle mi-purple">⚡</div>
-        <div><div class="mi-label">Position Timing</div><div class="mi-sub">Forwards/attackers +18% (shoot earlier in games)</div></div>
+        <div><div class="mi-label">Early-Game Tendency</div><div class="mi-sub">High-press forwards shoot in first 15 mins</div></div>
       </div>
       <div class="model-item">
         <div class="mi-circle mi-amber">FK</div>
-        <div><div class="mi-label">Free Kick Specialist</div><div class="mi-sub">Known FK takers +12% (direct shot from set pieces)</div></div>
+        <div><div class="mi-label">Set Piece Specialist</div><div class="mi-sub">FK takers +12% · Injury doubts −65%</div></div>
       </div>
       <div class="show-details" onclick="openModal()">Show full details ▾</div>
     </div>
@@ -3305,7 +3305,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="sb-stat"><span class="sb-stat-label">Total Matches</span><span class="sb-stat-val">72</span></div>
       <div class="sb-stat"><span class="sb-stat-label">With Live Odds</span><span class="sb-stat-val">9</span></div>
       <div class="sb-stat"><span class="sb-stat-label">Teams with National Data</span><span class="sb-stat-val">2</span></div>
-      <p class="sb-upd">Last Updated <span>09 Jun 2026 · 20:01 AEST</span></p>
+      <p class="sb-upd">Last Updated <span>09 Jun 2026 · 20:03 AEST</span></p>
     </div>
 
     <!-- Data Coverage -->
@@ -3314,15 +3314,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="cov-item">
         <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#1e2d3d" stroke-width="4"/><circle cx="20" cy="20" r="16" fill="none" stroke="#22c55e" stroke-width="4" stroke-dasharray="4.0 100.5" stroke-dashoffset="25.1" stroke-linecap="round"/><text x="20" y="20" text-anchor="middle" dy=".35em" fill="#22c55e" font-size="9" font-weight="700">4%</text></svg>
         <div>
-          <div class="cov-label">National Team Data</div>
-          <div class="cov-sub">2 / 48 teams</div>
+          <div class="cov-label">National Team Stats</div>
+          <div class="cov-sub">2 / 48 teams · filling daily</div>
         </div>
       </div>
       <div class="cov-item">
         <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#1e2d3d" stroke-width="4"/><circle cx="20" cy="20" r="16" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="12.1 100.5" stroke-dashoffset="25.1" stroke-linecap="round"/><text x="20" y="20" text-anchor="middle" dy=".35em" fill="#3b82f6" font-size="9" font-weight="700">12%</text></svg>
         <div>
           <div class="cov-label">Bookmaker Odds</div>
-          <div class="cov-sub">9 / 72 matches</div>
+          <div class="cov-sub">9 / 72 · publishes 48–72h before kickoff</div>
         </div>
       </div>
     </div>
@@ -3415,53 +3415,73 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){
 <div class="modal-overlay" id="model-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
-      <h2>🐱 How the Cat Dad Model Works</h2>
+      <h2>🐱 The Cat Dad Model — How It Works</h2>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
 
       <div class="modal-section">
-        <h3>🎯 What We're Predicting</h3>
-        <p>For each WC 2026 group stage match, we estimate which player is most likely to have the <strong>first shot on target</strong> — a specific prop betting market offered by bookmakers like William Hill and Unibet.</p>
+        <h3>🎯 The Bet</h3>
+        <p><strong>First Shot on Target</strong> — you pick one player to have the first shot on target in a match. It doesn't need to be a goal, just any attempt that forces the goalkeeper to save. This is a prop bet offered by William Hill, Unibet, and others. It's a niche market, which means bookmakers sometimes misprice it — that's our edge.</p>
       </div>
 
       <div class="modal-section">
-        <h3>⚙️ The Core Formula</h3>
-        <p>We model shots as a <strong>Poisson process</strong> — a way to describe random events happening over time. Each player has a rate λ (lambda) representing how many shots on target they're expected to take per game. The player who shoots fastest on average is most likely to be first.</p>
+        <h3>🧠 The Core Idea — Two Steps</h3>
+        <p>We don't just ask <em>"who shoots the most?"</em> — we ask <em>"who generates the first shot before everyone else?"</em> That's a different problem. We solve it in two steps:</p>
         <div class="modal-formula">
-          P(player X is first SOT) = λ<sub>X</sub> / Σλ<sub>all players</sub>
+          Step 1 · Which team gets the first SOT?<br>
+          Step 2 · Which player on that team pulls the trigger?<br><br>
+          P(player first SOT) = P(team first SOT) × P(player | team shoots first)
         </div>
-        <p>So if Son has λ=1.33 and all other players combined have Σλ=18.5, his first-SOT probability is 1.33/18.5 = <strong>7.2%</strong>.</p>
+        <p><strong>Why this matters:</strong> If Mexico are 80% likely to get the first SOT (they're big favourites), Mexican strikers should dominate the rankings — even if a South African player has great individual stats.</p>
+      </div>
+
+      <hr class="modal-divider">
+
+      <div class="modal-section">
+        <h3>⚙️ Step 1 — Which Team Shoots First?</h3>
+        <div class="modal-factor">
+          <div class="mf-circle mi-blue" style="font-size:.55rem">H2H</div>
+          <div>
+            <div class="mf-title">Match Win Odds → Team Attack Probability</div>
+            <div class="mf-desc">We convert the bookmaker's match winner odds into a probability that each team generates the first SOT. The stronger team (shorter price to win) attacks first in roughly 65% of matches they win, and 50/50 in draws. We weight these to get <strong>P(team gets first SOT)</strong>. Example: Mexico 1.36 to win → ~79% chance they get first SOT.</div>
+          </div>
+        </div>
       </div>
 
       <div class="modal-section">
-        <h3>📊 The Four Factors</h3>
+        <h3>⚙️ Step 2 — Which Player on That Team?</h3>
+        <p style="margin-bottom:10px">Once we know which team is likely to shoot first, we rank players within that team using five factors:</p>
+
         <div class="modal-factor">
-          <div class="mf-circle mi-green">60%</div>
+          <div class="mf-circle mi-green" style="font-size:.6rem">SOT</div>
           <div>
-            <div class="mf-title">National Team SOT Rate</div>
-            <div class="mf-desc">We pull each player's shots on target per 90 minutes across <strong>4 years of international fixtures</strong> (2022–2025: World Cup, UEFA Nations League, qualifiers, friendlies). National stats are prioritised over club stats because players operate in different tactical systems for their country — a striker who shoots 3× per game at club level might play wider or deeper for their national team.</div>
+            <div class="mf-title">International Shooting Stats <span style="color:#64748b;font-weight:400;font-size:.7rem">(35% bookie + 25% nat stats)</span></div>
+            <div class="mf-desc">We use each player's <strong>shots on target per 90 minutes for their national team</strong> (2022–2025: World Cup, Nations League, qualifiers). This beats club stats because players have different roles for their country — a striker who shoots 3× a game at club level may play deeper internationally. The bookmaker's "Over 0.5 SOT" odds fill the gaps where we lack data.</div>
           </div>
         </div>
-        <div class="modal-factor">
-          <div class="mf-circle mi-blue">40%</div>
-          <div>
-            <div class="mf-title">Bookmaker Implied Rate</div>
-            <div class="mf-desc">William Hill's "Over 0.5 shots on target" odds are converted into a Poisson rate using <strong>λ = −ln(1 − p)</strong> where p is the implied probability (1/odds). This fills gaps where we have no stat data and grounds the model in market consensus — bookmakers have access to team news, form data, and injury information we don't.</div>
-          </div>
-        </div>
+
         <div class="modal-factor">
           <div class="mf-circle mi-purple">⚡</div>
           <div>
-            <div class="mf-title">Position Timing Adjustment</div>
-            <div class="mf-desc">The first-shot market is about <em>timing</em>, not just volume. Forwards and attackers tend to attempt shots in the opening minutes when teams press high. Defenders rarely shoot early. We apply a multiplier: <strong>Attackers/Forwards +18%</strong>, Midfielders neutral, Defenders −20%, Goalkeepers −80%.</div>
+            <div class="mf-title">Early-Game Tendency <span style="color:#64748b;font-weight:400;font-size:.7rem">(15%)</span></div>
+            <div class="mf-desc">This market isn't about who shoots most over 90 minutes — it's about who shoots <em>first</em>. High-press forwards (Mbappe, Son, Saka, Vinicius Jr) attempt shots in the opening 10–15 minutes far more often than ball-retention midfielders. We apply a <strong>+15% boost</strong> to known early-game attackers. ⚡ badge = confirmed early shooter.</div>
           </div>
         </div>
+
         <div class="modal-factor">
           <div class="mf-circle mi-amber">FK</div>
           <div>
-            <div class="mf-title">Free Kick Specialist Boost</div>
-            <div class="mf-desc">Players who regularly take free kicks get a <strong>+12% boost</strong>. A direct free kick in a good position is one of the most common sources of early shots on target in international football. We maintain a curated list of known FK takers per national team (e.g. Son, Griezmann, Bruno Fernandes, Messi, De Bruyne).</div>
+            <div class="mf-title">Free Kick Specialist <span style="color:#64748b;font-weight:400;font-size:.7rem">(5%)</span></div>
+            <div class="mf-desc">Free kicks inside the final third are one of the most common sources of early shots on target. If a foul is won in the first 5 minutes, the designated FK taker walks up and shoots. We track known specialists (Son, Griezmann, Bruno Fernandes, De Bruyne, Messi) with a <strong>+12% boost</strong>. FK badge = verified taker.</div>
+          </div>
+        </div>
+
+        <div class="modal-factor">
+          <div class="mf-circle" style="background:#ef444422;color:#ef4444;border:2px solid #ef444444;font-size:.55rem">⚠</div>
+          <div>
+            <div class="mf-title">Injury / Availability <span style="color:#64748b;font-weight:400;font-size:.7rem">(hard penalty)</span></div>
+            <div class="mf-desc">A player with a 10% model probability becomes near-zero if he's doubtful to start. We apply a <strong>−65% penalty</strong> to confirmed injury doubts. The bookmaker odds often lag on fitness news — this is where we can find real edge. ⚠ DOUBT badge = flagged as uncertain starter.</div>
           </div>
         </div>
       </div>
@@ -3469,23 +3489,26 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){
       <hr class="modal-divider">
 
       <div class="modal-section">
-        <h3>📐 Edge Calculation</h3>
-        <p>The <strong>Edge</strong> column shows where our model disagrees with the bookmaker's implied ranking:</p>
-        <ul>
-          <li><strong>Edge = Cat Dad Model % − Bookmaker Implied %</strong></li>
-          <li><span style="color:#22c55e">Green (positive edge)</span> — our model rates this player higher than the market. The bookmaker may be undervaluing them relative to their international shot rate or set-piece involvement.</li>
-          <li><span style="color:#ef4444">Red (negative edge)</span> — the market rates them higher than we do. Consider fading them in the first-shot market.</li>
-        </ul>
-        <p style="margin-top:8px">Positive edge does not guarantee a winning bet — it indicates potential value worth investigating.</p>
+        <h3>📐 Reading the Edge</h3>
+        <p><strong>Edge = Cat Dad Model % − Bookmaker Implied %</strong></p>
+        <p style="margin-top:6px">The bookmaker implied % is calculated by normalising their "Over 0.5 SOT" odds across all players in the match — it tells you what the market thinks. Our model % is our independent estimate. The gap between them is the edge.</p>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-val">+2.1% Strong</span><span style="font-size:.75rem;color:#94a3b8">Our model rates this player significantly higher than the market. Potential value bet.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-slight-val">+0.8% Slight</span><span style="font-size:.75rem;color:#94a3b8">Small disagreement. Worth noting but not a strong signal.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-neutral">Neutral</span><span style="font-size:.75rem;color:#94a3b8">Model and market agree. No edge either way.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-fad">−2.0% Fade</span><span style="font-size:.75rem;color:#94a3b8">Market is overrating this player vs our model. Consider avoiding.</span></div>
+        </div>
       </div>
 
+      <hr class="modal-divider">
+
       <div class="modal-section">
-        <h3>⚠️ Limitations</h3>
+        <h3>⚠️ What This Model Doesn't Do (Yet)</h3>
         <ul>
-          <li>National team stats are <strong>sparse</strong> — most players have 5–15 appearances. Small samples create noise.</li>
-          <li>We do not currently model <strong>expected lineups</strong> — a player listed may not start.</li>
-          <li>Bookmaker odds reflect the closest available market to "first SOT" — not the exact market.</li>
-          <li>FK specialist list is manually curated and may be incomplete.</li>
+          <li><strong>Confirmed lineups</strong> — we don't yet factor in whether a player is starting. A high-probability player who's on the bench is worthless. Always check team news before betting.</li>
+          <li><strong>Shot timing data</strong> — we don't yet have per-player data on what minute they typically shoot. This is the biggest gap. Coming in v2.</li>
+          <li><strong>Opponent defensive profile</strong> — we don't yet adjust for how many early SOTs each opponent concedes. Coming in v2.</li>
+          <li>Positive edge does not guarantee profit. This is a tool, not a guarantee.</li>
         </ul>
       </div>
 
