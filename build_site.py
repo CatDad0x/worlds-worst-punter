@@ -222,6 +222,10 @@ TEAM_ABBR = {
 BM_STYLES = {
     "William Hill": '<span class="bm wh">William <strong>HILL</strong></span>',
     "Unibet":       '<span class="bm un">UNIBET<span class="un-dots">••••</span></span>',
+    "1xBet":        '<span class="bm xbet">1xBet</span>',
+    "FanDuel":      '<span class="bm fd">FanDuel</span>',
+    "BetRivers":    '<span class="bm br">BetRivers</span>',
+    "Bet365":       '<span class="bm b365">bet365</span>',
     "Paddy Power":  '<span class="bm pp">PADDY POWER.</span>',
     "LeoVegas":     '<span class="bm lv">LeoVegas</span>',
     "Betfair":      '<span class="bm bf">betfair</span>',
@@ -640,7 +644,7 @@ def match_cards(games):
 {match_player_rows(g["players"])}
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
       </div>
     </div>""")
     return "\n".join(cards)
@@ -808,6 +812,10 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .pp{{color:#22c55e;font-size:.65rem}}
 .lv{{color:#c084fc;font-size:.65rem}}
 .bf{{color:#f97316;font-size:.65rem}}
+.xbet{{color:#1d9bf0;font-size:.65rem;font-weight:700}}
+.fd{{color:#1db954;font-size:.65rem;font-weight:700}}
+.br{{color:#7c3aed;font-size:.65rem;font-weight:700}}
+.b365{{color:#f97316;font-size:.65rem;font-weight:700}}
 .generic{{color:#94a3b8;font-size:.65rem;background:#1a2540;padding:2px 5px;border-radius:3px}}
 
 /* ── SIDEBAR ── */

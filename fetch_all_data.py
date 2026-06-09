@@ -47,7 +47,7 @@ def fetch_odds_for_event(event_id, home, away):
         f"https://api.the-odds-api.com/v4/sports/soccer_fifa_world_cup/events/{event_id}/odds",
         params={
             "apiKey": ODDS_API_KEY,
-            "regions": "uk",
+            "regions": "uk,eu,us,au",
             "markets": "player_shots_on_target,h2h",
             "oddsFormat": "decimal"
         }
