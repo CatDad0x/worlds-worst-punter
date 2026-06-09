@@ -74,7 +74,7 @@ TEAM_IDS = {
 }
 
 # Season weights: past 1 year focused (2025 = current year, 2024 = last year)
-WEIGHTS = {2022: 0.02, 2023: 0.05, 2024: 0.18, 2025: 0.50, 2026: 0.25}
+WEIGHTS = {2022: 0.02, 2023: 0.05, 2024: 0.18, 2025: 0.375, 2026: 0.375}
 
 call_count = 0
 
