@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>World's Worst Punter · First Shot On Target Edge Finder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#080d18;color:#e2e8f0;min-height:100vh;font-size:12px}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#0d1424;border-bottom:1px solid #1a2540}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.trophy{font-size:1.35rem}
+.site-title{font-size:1.08rem;font-weight:800;letter-spacing:-.3px}
+.site-title .wc{color:#22c55e}
+.site-title .rest{color:#f1f5f9}
+.site-title .accent{color:#4ade80}
+.site-subtitle{color:#64748b;font-size:.68rem;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px;text-align:right}
+.last-upd-label{color:#64748b;font-size:.6rem;text-transform:uppercase;letter-spacing:.4px}
+.last-upd-val{color:#94a3b8;font-size:.68rem;font-weight:600}
+.refresh-btn{width:26px;height:26px;background:#1a2540;border:1px solid #2a3a5c;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748b;font-size:.75rem}
+.refresh-btn:hover{background:#1e2d4a;color:#e2e8f0}
+
+/* ── KPI BAR ── */
+.kpi-bar{display:flex;gap:0;background:#0d1424;border-bottom:1px solid #1a2540}
+.kpi{flex:1;display:flex;align-items:center;gap:10px;padding:12px 16px;border-right:1px solid #1a2540}
+.kpi:last-child{border-right:none}
+.kpi-icon{width:34px;height:34px;border-radius:8px;background:#22c55e18;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.kpi-icon.blue{background:#3b82f618}
+.kpi-icon.purple{background:#8b5cf618}
+.kpi-icon.amber{background:#f59e0b18}
+.kpi-n{font-size:1.3rem;font-weight:800;color:#f1f5f9;line-height:1}
+.kpi-sub{font-size:.6rem;color:#64748b;margin-top:3px}
+.kpi-sub .dim{color:#4b5563;font-size:.57rem}
+
+/* ── MAIN LAYOUT ── */
+.main{display:flex;gap:0;min-height:calc(100vh - 100px)}
+.content{flex:1;padding:16px 16px 32px;min-width:0;border-right:1px solid #1a2540}
+.sidebar{width:248px;flex-shrink:0;padding:16px 13px;background:#0b1020}
+
+/* ── SECTION HEADERS ── */
+.sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sec-title{display:flex;align-items:center;gap:7px;font-weight:700;font-size:.83rem;color:#f1f5f9}
+.sec-title .ico{color:#22c55e}
+.sec-subtitle{color:#64748b;font-size:.63rem;font-weight:400;margin-left:4px}
+.view-all{background:#1a2540;border:1px solid #2a3a5c;color:#94a3b8;font-size:.67rem;padding:5px 10px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none}
+.view-all:hover{background:#1e2d4a;color:#e2e8f0}
+
+/* ── BEST EDGES TABLE ── */
+.be-card{background:#0f1929;border:1px solid #1a2540;border-radius:9px;overflow:hidden;margin-bottom:16px}
+.be-table{width:100%;border-collapse:collapse}
+.be-table th{padding:8px 10px;font-size:.58rem;color:#4b5563;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #1a2540;text-align:left;white-space:nowrap}
+.be-table th.th-m{color:#3b82f6}
+.be-table th.th-b{color:#f59e0b}
+.be-row td{padding:9px 10px;border-bottom:1px solid #111d30;vertical-align:middle}
+.be-row:last-child td{border-bottom:none}
+.be-row:hover td{background:#111e33}
+
+.rank-circle{display:inline-flex;width:19px;height:19px;background:#22c55e;border-radius:50%;align-items:center;justify-content:center;font-size:.63rem;font-weight:800;color:#000}
+.avatar{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700;color:#fff;flex-shrink:0}
+.be-player{display:flex;align-items:center;gap:7px}
+.be-name{font-weight:600;color:#f1f5f9;font-size:.77rem}
+.be-country{font-size:.6rem;color:#64748b;margin-top:1px}
+.be-match{font-weight:700;font-size:.72rem;color:#f1f5f9}
+.be-date{font-size:.6rem;color:#64748b;margin-top:1px}
+.td-model{color:#3b82f6;font-weight:800;font-size:.82rem}
+.td-bm{color:#f59e0b;font-weight:700;font-size:.77rem}
+.odds-val{font-weight:800;color:#f1f5f9;margin-right:3px}
+
+/* ── FK TAG ── */
+.fk-tag{font-size:.55rem;font-weight:800;background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44;padding:1px 4px;border-radius:3px;letter-spacing:.3px;vertical-align:middle}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.ftab{background:#0f1929;border:1px solid #1a2540;color:#94a3b8;font-size:.67rem;padding:6px 12px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.ftab:hover{background:#162038;color:#e2e8f0}
+.ftab.active{background:#22c55e18;border-color:#22c55e55;color:#22c55e}
+.ftab .fi{font-size:.72rem}
+.search-wrap{flex:1;min-width:160px;position:relative}
+.search-wrap input{width:100%;padding:6px 10px 6px 28px;background:#0f1929;border:1px solid #1a2540;border-radius:5px;color:#e2e8f0;font-size:.7rem;outline:none}
+.search-wrap input:focus{border-color:#22c55e55}
+.search-wrap input::placeholder{color:#4b5563}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#4b5563;font-size:.72rem}
+.filter-btn{background:#0f1929;border:1px solid #1a2540;color:#94a3b8;font-size:.67rem;padding:6px 10px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:4px}
+
+/* ── MATCH CARDS ── */
+.mcard{background:#0f1929;border:1px solid #1a2540;border-radius:9px;margin-bottom:7px;overflow:hidden}
+.mcard:hover{border-color:#2a3a5c}
+.card-dim{opacity:.45}
+.mcard-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;cursor:pointer;flex-wrap:wrap;gap:5px}
+.mcard-header:hover{background:#111d30}
+.mcard-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mflag{font-size:1rem}
+.mteam{font-weight:700;font-size:.82rem;color:#f1f5f9}
+.mvs{color:#4b5563;font-size:.63rem;font-weight:700;background:#1a2540;padding:2px 5px;border-radius:3px}
+.mbadge{font-size:.58rem;font-weight:600;padding:2px 7px;border-radius:3px}
+.nat-badge{background:#22c55e18;color:#22c55e;border:1px solid #22c55e33}
+.bk-badge{background:#1a2540;color:#64748b}
+.tbc-badge{background:#f59e0b18;color:#f59e0b}
+.mcard-right{display:flex;align-items:center;gap:9px}
+.mdate{color:#64748b;font-size:.65rem}
+.mchev{color:#4b5563;font-size:.72rem;transition:transform .2s}
+.mchev.open{transform:rotate(180deg)}
+
+.mcard-body{display:none;padding:0 14px 12px}
+.mcard.open .mcard-body{display:block}
+.mcard.open .mcard-header{border-bottom:1px solid #1a2540}
+
+.mtable{width:100%;border-collapse:collapse;margin-top:5px}
+.mtable th{padding:7px 9px;font-size:.57rem;color:#4b5563;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1a2540;text-align:left;white-space:nowrap}
+.mtable th.th-m{color:#3b82f6}
+.mtable th.th-b{color:#f59e0b}
+.th-info{color:#2a3a5c;cursor:help}
+.mtable td{padding:8px 9px;border-bottom:1px solid #111d30;vertical-align:middle;font-size:.77rem}
+.mtable tr:last-child td{border-bottom:none}
+.mtable tr:hover td{background:#111e33}
+.medal{font-size:.85rem}
+.rank-sm{display:inline-flex;width:16px;height:16px;background:#1a2540;border-radius:50%;align-items:center;justify-content:center;font-size:.58rem;color:#64748b;font-weight:700}
+.td-pname{font-weight:600;color:#f1f5f9}
+.no-data{text-align:center;color:#4b5563;padding:16px!important;font-style:italic;font-size:.72rem}
+.mfootnote{color:#2a3a5c;font-size:.58rem;margin-top:9px;padding-top:7px;border-top:1px solid #111d30;line-height:1.6}
+.mfootnote sub{font-size:.54rem;vertical-align:sub}
+
+/* ── EDGE PILLS ── */
+.epill{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.e-strong-val{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44}
+.e-slight-val{background:#22c55e11;color:#4ade80}
+.e-neutral{background:#1a2540;color:#64748b}
+.e-slight-fad{background:#ef444411;color:#fca5a5}
+.e-strong-fad{background:#ef444422;color:#ef4444;border:1px solid #ef444444}
+
+/* ── CONFIDENCE ── */
+.cbadge{font-size:.7rem;font-weight:600;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.conf-hi{background:#22c55e18;color:#22c55e}
+.conf-med{background:#f59e0b18;color:#f59e0b}
+.conf-lo{background:#ef444418;color:#ef4444}
+
+/* ── BOOKMAKER LOGOS ── */
+.bm{font-size:.68rem;font-weight:700;white-space:nowrap}
+.wh{color:#f1f5f9;background:#111;padding:2px 5px;border-radius:3px;font-size:.63rem}
+.wh strong{font-size:.7rem}
+.un{color:#f59e0b;font-size:.65rem;letter-spacing:.5px}
+.un-dots{color:#f59e0b44;font-size:.5rem;margin-left:1px}
+.pp{color:#22c55e;font-size:.65rem}
+.lv{color:#c084fc;font-size:.65rem}
+.bf{color:#f97316;font-size:.65rem}
+.generic{color:#94a3b8;font-size:.65rem;background:#1a2540;padding:2px 5px;border-radius:3px}
+
+/* ── SIDEBAR ── */
+.sb-section{background:#0f1929;border:1px solid #1a2540;border-radius:9px;padding:11px 13px;margin-bottom:10px}
+.sb-title{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.73rem;color:#f1f5f9;margin-bottom:10px}
+.sb-title .sb-ico{color:#22c55e;margin-right:5px}
+.sb-toggle{color:#64748b;cursor:pointer;font-size:.67rem}
+
+.model-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.model-item:last-child{margin-bottom:0}
+.mi-circle{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:middle;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0}
+.mi-green{background:#22c55e22;color:#22c55e;border:2px solid #22c55e44}
+.mi-blue{background:#3b82f622;color:#3b82f6;border:2px solid #3b82f644}
+.mi-purple{background:#8b5cf622;color:#8b5cf6;border:2px solid #8b5cf644}
+.mi-amber{background:#f59e0b22;color:#f59e0b;border:2px solid #f59e0b44}
+.mi-label{font-weight:700;font-size:.7rem;color:#f1f5f9;line-height:1.2}
+.mi-sub{font-size:.6rem;color:#64748b;margin-top:1px}
+.show-details{color:#22c55e;font-size:.65rem;cursor:pointer;display:flex;align-items:center;gap:4px;margin-top:7px}
+
+.sb-stat{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #111d30}
+.sb-stat:last-child{border-bottom:none}
+.sb-stat-label{color:#64748b;font-size:.67rem}
+.sb-stat-val{font-weight:700;color:#f1f5f9;font-size:.73rem}
+.sb-upd{color:#4b5563;font-size:.6rem;margin-top:7px}
+.sb-upd span{color:#22c55e}
+
+.cov-item{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.cov-item:last-child{margin-bottom:0}
+.cov-label{font-size:.67rem;color:#94a3b8;font-weight:600}
+.cov-sub{font-size:.6rem;color:#4b5563}
+
+.leg-item{display:flex;align-items:center;gap:7px;padding:4px 0;font-size:.65rem;color:#94a3b8}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.leg-range{color:#4b5563;font-size:.6rem;margin-left:auto}
+
+.disclaimer{background:#1a2540;border:1px solid #2a3a5c;border-left:3px solid #3b82f6;border-radius:5px;padding:8px 10px;margin-top:7px;color:#64748b;font-size:.62rem;line-height:1.6}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .kpi{padding:12px 14px}
+}
+@media(max-width:600px){
+  .be-table th:nth-child(3),.be-row td:nth-child(3),
+  .be-table th:nth-child(8),.be-row td:nth-child(8){display:none}
+  .kpi-bar{flex-wrap:wrap}
+  .kpi{min-width:50%}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="trophy">🏆</span>
+    <div>
+      <div class="site-title"><span class="wc">WC 2026</span>&nbsp;&nbsp;<span class="rest">World's Worst Punter's <span class="accent">First Shot On Target Edge Finder</span></span></div>
+      <div class="site-subtitle">Cat Dad Model probabilities vs bookmaker-implied odds for every group-stage match.</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div>
+      <div class="last-upd-label">Last updated</div>
+      <div class="last-upd-val">09 Jun 2026 · 09:35 UTC</div>
+    </div>
+    <div class="refresh-btn" onclick="location.reload()">↻</div>
+  </div>
+</div>
+
+<!-- KPI BAR -->
+<div class="kpi-bar">
+  <div class="kpi">
+    <div class="kpi-icon">📅</div>
+    <div><div class="kpi-n">72</div><div class="kpi-sub">Matches<br><span class="dim">Group Stage</span></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon blue">📈</div>
+    <div><div class="kpi-n">9</div><div class="kpi-sub">With Live Odds<br><span class="dim">12% of matches</span></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon purple">👥</div>
+    <div><div class="kpi-n">48</div><div class="kpi-sub">Teams<br><span class="dim">Qualified</span></div></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-icon amber">🕐</div>
+    <div><div class="kpi-n">09 Jun 2026</div><div class="kpi-sub">Last Updated<br><span class="dim">09:35 UTC</span></div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- BEST EDGES -->
+    <div class="be-card">
+      <div style="padding:14px 16px 0;display:flex;justify-content:space-between;align-items:center">
+        <div class="sec-title">
+          <span class="ico">📊</span> Best Edges
+          <span class="sec-subtitle">Top value opportunities across all matches</span>
+        </div>
+        <a class="view-all" href="#all-matches">View all matches →</a>
+      </div>
+      <table class="be-table" style="margin-top:10px">
+        <thead>
+          <tr>
+            <th>RANK</th><th>PLAYER</th><th>MATCH</th>
+            <th class="th-m">CAT DAD MODEL</th>
+            <th class="th-b">BOOKIE</th>
+            <th>EDGE ⓘ</th>
+            <th>BEST ODDS ⓘ</th>
+            <th>CONFIDENCE</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr class="be-row">
+              <td><span class="rank-circle">1</span></td>
+              <td>
+                <div class="be-player">
+                  <div class="avatar" style="background:#ec4899">NE</div>
+                  <div>
+                    <div class="be-name">Neymar <span class='fk-tag'>FK</span></div>
+                    <div class="be-country">🇧🇷 Brazil</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="be-match">BRA vs MAR</div>
+                <div class="be-date">Sat 13 Jun · 22:00</div>
+              </td>
+              <td class="td-model">6.1%</td>
+              <td class="td-bm">4.7%</td>
+              <td><span class="epill e-slight-val">+1.4% Slight</span></td>
+              <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+              <td><span class="cbadge conf-med">◉ Medium</span></td>
+            </tr>
+            <tr class="be-row">
+              <td><span class="rank-circle">2</span></td>
+              <td>
+                <div class="be-player">
+                  <div class="avatar" style="background:#3b82f6">IR</div>
+                  <div>
+                    <div class="be-name">Igor Thiago Nascimento Rodrigues </div>
+                    <div class="be-country">🇧🇷 Brazil</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="be-match">BRA vs MAR</div>
+                <div class="be-date">Sat 13 Jun · 22:00</div>
+              </td>
+              <td class="td-model">6.9%</td>
+              <td class="td-bm">5.9%</td>
+              <td><span class="epill e-slight-val">+1.0% Slight</span></td>
+              <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+              <td><span class="cbadge conf-med">◉ Medium</span></td>
+            </tr>
+            <tr class="be-row">
+              <td><span class="rank-circle">3</span></td>
+              <td>
+                <div class="be-player">
+                  <div class="avatar" style="background:#f59e0b">JD</div>
+                  <div>
+                    <div class="be-name">Jonathan David <span class='fk-tag'>FK</span></div>
+                    <div class="be-country">🇨🇦 Canada</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="be-match">CAN vs BIH</div>
+                <div class="be-date">Fri 12 Jun · 19:00</div>
+              </td>
+              <td class="td-model">7.1%</td>
+              <td class="td-bm">6.4%</td>
+              <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+              <td><span class="odds-val">1.30</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+              <td><span class="cbadge conf-med">◉ Medium</span></td>
+            </tr>
+            <tr class="be-row">
+              <td><span class="rank-circle">4</span></td>
+              <td>
+                <div class="be-player">
+                  <div class="avatar" style="background:#f59e0b">ES</div>
+                  <div>
+                    <div class="be-name">Endrick Felipe Moreira de Sousa </div>
+                    <div class="be-country">🇧🇷 Brazil</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="be-match">BRA vs MAR</div>
+                <div class="be-date">Sat 13 Jun · 22:00</div>
+              </td>
+              <td class="td-model">5.4%</td>
+              <td class="td-bm">4.7%</td>
+              <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+              <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+              <td><span class="cbadge conf-med">◉ Medium</span></td>
+            </tr>
+            <tr class="be-row">
+              <td><span class="rank-circle">5</span></td>
+              <td>
+                <div class="be-player">
+                  <div class="avatar" style="background:#10b981">RV</div>
+                  <div>
+                    <div class="be-name">Rayan Vitor </div>
+                    <div class="be-country">🇧🇷 Brazil</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="be-match">BRA vs MAR</div>
+                <div class="be-date">Sat 13 Jun · 22:00</div>
+              </td>
+              <td class="td-model">5.4%</td>
+              <td class="td-bm">4.7%</td>
+              <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+              <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+              <td><span class="cbadge conf-med">◉ Medium</span></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" id="all-matches">
+      <button class="ftab active" onclick="filterMatches('all',this)"><span class="fi">📅</span> All Matches</button>
+      <button class="ftab" onclick="filterMatches('value',this)"><span class="fi">⭐</span> Value Only</button>
+      <button class="ftab" onclick="filterMatches('live',this)"><span class="fi">📡</span> With Live Odds</button>
+      <button class="ftab" onclick="filterMatches('high',this)"><span class="fi">🛡</span> High Confidence</button>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search player or team..." oninput="searchMatches(this.value)">
+      </div>
+      <button class="filter-btn">⚙ Filters</button>
+    </div>
+
+    <!-- MATCH CARDS -->
+    <div id="match-list">
+    <div class="mcard" id="mc-80d82d11">
+      <div class="mcard-header" onclick="tog('80d82d11')">
+        <div class="mcard-left">
+          <span class="mflag">🇲🇽</span>
+          <span class="mteam">Mexico</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">South Africa</span>
+          <span class="mflag">🇿🇦</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 11 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-80d82d11">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-80d82d11">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Santiago Gimenez </td>
+                <td class="td-model">6.9%</td>
+                <td class="td-bm">6.9%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.22</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Raul Jimenez </td>
+                <td class="td-model">6.0%</td>
+                <td class="td-bm">6.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Armando Gonzalez Alba </td>
+                <td class="td-model">5.0%</td>
+                <td class="td-bm">5.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Guillermo Martinez </td>
+                <td class="td-model">5.0%</td>
+                <td class="td-bm">5.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Cesar Saul Huerta Valera </td>
+                <td class="td-model">4.8%</td>
+                <td class="td-bm">4.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-384cbb5d">
+      <div class="mcard-header" onclick="tog('384cbb5d')">
+        <div class="mcard-left">
+          <span class="mflag">🇰🇷</span>
+          <span class="mteam">South Korea</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Czech Republic</span>
+          <span class="mflag">🇨🇿</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 12 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-384cbb5d">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-384cbb5d">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Heung-Min Son <span class='fk-tag'>FK</span></td>
+                <td class="td-model">6.0%</td>
+                <td class="td-bm">5.5%</td>
+                <td><span class="epill e-slight-val">+0.5% Slight</span></td>
+                <td><span class="odds-val">1.36</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Patrik Schick <span class='fk-tag'>FK</span></td>
+                <td class="td-model">5.7%</td>
+                <td class="td-bm">5.2%</td>
+                <td><span class="epill e-slight-val">+0.5% Slight</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Hyeon-gyu Oh </td>
+                <td class="td-model">4.2%</td>
+                <td class="td-bm">4.3%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.55</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Jan Kuchta </td>
+                <td class="td-model">4.2%</td>
+                <td class="td-bm">4.3%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.55</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Kangin Lee </td>
+                <td class="td-model">4.0%</td>
+                <td class="td-bm">4.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.60</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-d1f4f946">
+      <div class="mcard-header" onclick="tog('d1f4f946')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇦</span>
+          <span class="mteam">Canada</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Bosnia & Herzegovina</span>
+          <span class="mflag">🇧🇦</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 12 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-d1f4f946">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-d1f4f946">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Jonathan David <span class='fk-tag'>FK</span></td>
+                <td class="td-model">7.1%</td>
+                <td class="td-bm">6.4%</td>
+                <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+                <td><span class="odds-val">1.30</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Promise Oluwatobi Emmanuel David </td>
+                <td class="td-model">5.7%</td>
+                <td class="td-bm">5.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.36</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Cyle Larin </td>
+                <td class="td-model">5.4%</td>
+                <td class="td-bm">5.5%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Tani Oluwaseyi </td>
+                <td class="td-model">3.9%</td>
+                <td class="td-bm">4.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.67</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Edin Dzeko </td>
+                <td class="td-model">3.7%</td>
+                <td class="td-bm">3.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.73</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-c12986f4">
+      <div class="mcard-header" onclick="tog('c12986f4')">
+        <div class="mcard-left">
+          <span class="mflag">🇺🇸</span>
+          <span class="mteam">USA</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Paraguay</span>
+          <span class="mflag">🇵🇾</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 13 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-c12986f4">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c12986f4">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Weston McKennie <span class='fk-tag'>FK</span></td>
+                <td class="td-model">4.7%</td>
+                <td class="td-bm">4.2%</td>
+                <td><span class="epill e-slight-val">+0.5% Slight</span></td>
+                <td><span class="odds-val">1.62</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Ricardo Pepi </td>
+                <td class="td-model">4.6%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.53</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Alejandro Zendejas </td>
+                <td class="td-model">4.6%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.53</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Alex Adrian Arce Barrios </td>
+                <td class="td-model">4.6%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.53</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Folarin Balogun </td>
+                <td class="td-model">4.5%</td>
+                <td class="td-bm">4.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.55</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-26634922">
+      <div class="mcard-header" onclick="tog('26634922')">
+        <div class="mcard-left">
+          <span class="mflag">🇶🇦</span>
+          <span class="mteam">Qatar</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Switzerland</span>
+          <span class="mflag">🇨🇭</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 13 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-26634922">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-26634922">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Breel Embolo </td>
+                <td class="td-model">7.2%</td>
+                <td class="td-bm">7.2%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.17</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Cedric Itten </td>
+                <td class="td-model">7.2%</td>
+                <td class="td-bm">7.2%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.17</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Mohamed Zeki Amdouni </td>
+                <td class="td-model">7.0%</td>
+                <td class="td-bm">7.0%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.18</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Dan Ndoye </td>
+                <td class="td-model">6.4%</td>
+                <td class="td-bm">6.4%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.22</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Noah Okafor </td>
+                <td class="td-model">5.6%</td>
+                <td class="td-bm">5.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-f6c8748a">
+      <div class="mcard-header" onclick="tog('f6c8748a')">
+        <div class="mcard-left">
+          <span class="mflag">🇧🇷</span>
+          <span class="mteam">Brazil</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Morocco</span>
+          <span class="mflag">🇲🇦</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 13 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-f6c8748a">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f6c8748a">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Igor Thiago Nascimento Rodrigues </td>
+                <td class="td-model">6.9%</td>
+                <td class="td-bm">5.9%</td>
+                <td><span class="epill e-slight-val">+1.0% Slight</span></td>
+                <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Neymar <span class='fk-tag'>FK</span></td>
+                <td class="td-model">6.1%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-slight-val">+1.4% Slight</span></td>
+                <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Vinicius Junior </td>
+                <td class="td-model">5.8%</td>
+                <td class="td-bm">5.9%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Endrick Felipe Moreira de Sousa </td>
+                <td class="td-model">5.4%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+                <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Rayan Vitor </td>
+                <td class="td-model">5.4%</td>
+                <td class="td-bm">4.7%</td>
+                <td><span class="epill e-slight-val">+0.7% Slight</span></td>
+                <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-med">◉ Medium</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-5ae41a06">
+      <div class="mcard-header" onclick="tog('5ae41a06')">
+        <div class="mcard-left">
+          <span class="mflag">🇭🇹</span>
+          <span class="mteam">Haiti</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Scotland</span>
+          <span class="mflag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 14 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-5ae41a06">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-5ae41a06">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Scott McTominay </td>
+                <td class="td-model">5.6%</td>
+                <td class="td-bm">5.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Lawrence Shankland </td>
+                <td class="td-model">5.6%</td>
+                <td class="td-bm">5.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">George Hirst </td>
+                <td class="td-model">5.6%</td>
+                <td class="td-bm">5.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Che Adams </td>
+                <td class="td-model">5.6%</td>
+                <td class="td-bm">5.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Ross Stewart </td>
+                <td class="td-model">5.5%</td>
+                <td class="td-bm">5.5%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.36</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-564084f5">
+      <div class="mcard-header" onclick="tog('564084f5')">
+        <div class="mcard-left">
+          <span class="mflag">🇦🇺</span>
+          <span class="mteam">Australia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Turkey</span>
+          <span class="mflag">🇹🇷</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 14 Jun · 04:00 UTC</span>
+          <span class="mchev" id="chev-564084f5">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-564084f5">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Deniz Gul </td>
+                <td class="td-model">5.8%</td>
+                <td class="td-bm">5.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Arda Guler </td>
+                <td class="td-model">5.4%</td>
+                <td class="td-bm">5.4%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Kenan Yildiz </td>
+                <td class="td-model">5.1%</td>
+                <td class="td-bm">5.1%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.44</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Baris Alper Yilmaz </td>
+                <td class="td-model">4.8%</td>
+                <td class="td-bm">4.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.50</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Can Yilmaz Uzun </td>
+                <td class="td-model">4.8%</td>
+                <td class="td-bm">4.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.50</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard" id="mc-d79edbd6">
+      <div class="mcard-header" onclick="tog('d79edbd6')">
+        <div class="mcard-left">
+          <span class="mflag">🇩🇪</span>
+          <span class="mteam">Germany</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Curaçao</span>
+          <span class="mflag">🇨🇼</span>
+          <span class="mbadge bk-badge">Bookie-only</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 14 Jun · 17:00 UTC</span>
+          <span class="mchev" id="chev-d79edbd6">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-d79edbd6">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td><span class="medal">🥇</span></td>
+                <td class="td-pname">Jamie Leweling </td>
+                <td class="td-model">7.9%</td>
+                <td class="td-bm">7.9%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.29</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥈</span></td>
+                <td class="td-pname">Nadiem Amiri </td>
+                <td class="td-model">7.1%</td>
+                <td class="td-bm">7.1%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.35</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="medal">🥉</span></td>
+                <td class="td-pname">Leon Goretzka </td>
+                <td class="td-model">6.6%</td>
+                <td class="td-bm">6.6%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.40</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">4</span></td>
+                <td class="td-pname">Joshua Kimmich </td>
+                <td class="td-model">5.8%</td>
+                <td class="td-bm">5.8%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.50</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-sm">5</span></td>
+                <td class="td-pname">Felix Nmecha </td>
+                <td class="td-model">5.4%</td>
+                <td class="td-bm">5.4%</td>
+                <td><span class="epill e-neutral">Neutral</span></td>
+                <td><span class="odds-val">1.55</span> <span class="bm wh">William <strong>HILL</strong></span></td>
+                <td><span class="cbadge conf-lo">○ Low</span></td>
+              </tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-32ec06ab">
+      <div class="mcard-header" onclick="tog('32ec06ab')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇱</span>
+          <span class="mteam">Netherlands</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Japan</span>
+          <span class="mflag">🇯🇵</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 14 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-32ec06ab">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-32ec06ab">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-05752bb3">
+      <div class="mcard-header" onclick="tog('05752bb3')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇮</span>
+          <span class="mteam">Ivory Coast</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Ecuador</span>
+          <span class="mflag">🇪🇨</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 14 Jun · 23:00 UTC</span>
+          <span class="mchev" id="chev-05752bb3">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-05752bb3">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-b55f9569">
+      <div class="mcard-header" onclick="tog('b55f9569')">
+        <div class="mcard-left">
+          <span class="mflag">🇸🇪</span>
+          <span class="mteam">Sweden</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Tunisia</span>
+          <span class="mflag">🇹🇳</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 15 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-b55f9569">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-b55f9569">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-c54f00b1">
+      <div class="mcard-header" onclick="tog('c54f00b1')">
+        <div class="mcard-left">
+          <span class="mflag">🇪🇸</span>
+          <span class="mteam">Spain</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Cape Verde</span>
+          <span class="mflag">🇨🇻</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 15 Jun · 16:00 UTC</span>
+          <span class="mchev" id="chev-c54f00b1">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c54f00b1">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-fbfb95c6">
+      <div class="mcard-header" onclick="tog('fbfb95c6')">
+        <div class="mcard-left">
+          <span class="mflag">🇧🇪</span>
+          <span class="mteam">Belgium</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Egypt</span>
+          <span class="mflag">🇪🇬</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 15 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-fbfb95c6">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-fbfb95c6">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-64b91c5f">
+      <div class="mcard-header" onclick="tog('64b91c5f')">
+        <div class="mcard-left">
+          <span class="mflag">🇸🇦</span>
+          <span class="mteam">Saudi Arabia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Uruguay</span>
+          <span class="mflag">🇺🇾</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 15 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-64b91c5f">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-64b91c5f">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-ec51b9c4">
+      <div class="mcard-header" onclick="tog('ec51b9c4')">
+        <div class="mcard-left">
+          <span class="mflag">🇮🇷</span>
+          <span class="mteam">Iran</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">New Zealand</span>
+          <span class="mflag">🇳🇿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 16 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-ec51b9c4">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-ec51b9c4">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-73a4fcd1">
+      <div class="mcard-header" onclick="tog('73a4fcd1')">
+        <div class="mcard-left">
+          <span class="mflag">🇫🇷</span>
+          <span class="mteam">France</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Senegal</span>
+          <span class="mflag">🇸🇳</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 16 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-73a4fcd1">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-73a4fcd1">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-4d4f2b9b">
+      <div class="mcard-header" onclick="tog('4d4f2b9b')">
+        <div class="mcard-left">
+          <span class="mflag">🇮🇶</span>
+          <span class="mteam">Iraq</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Norway</span>
+          <span class="mflag">🇳🇴</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 16 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-4d4f2b9b">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-4d4f2b9b">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-f31b2ee9">
+      <div class="mcard-header" onclick="tog('f31b2ee9')">
+        <div class="mcard-left">
+          <span class="mflag">🇦🇷</span>
+          <span class="mteam">Argentina</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Algeria</span>
+          <span class="mflag">🇩🇿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 17 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-f31b2ee9">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f31b2ee9">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-25161cf6">
+      <div class="mcard-header" onclick="tog('25161cf6')">
+        <div class="mcard-left">
+          <span class="mflag">🇦🇹</span>
+          <span class="mteam">Austria</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Jordan</span>
+          <span class="mflag">🇯🇴</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 17 Jun · 04:00 UTC</span>
+          <span class="mchev" id="chev-25161cf6">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-25161cf6">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-6cc871c1">
+      <div class="mcard-header" onclick="tog('6cc871c1')">
+        <div class="mcard-left">
+          <span class="mflag">🇵🇹</span>
+          <span class="mteam">Portugal</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">DR Congo</span>
+          <span class="mflag">🇨🇩</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 17 Jun · 17:00 UTC</span>
+          <span class="mchev" id="chev-6cc871c1">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-6cc871c1">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-689096c8">
+      <div class="mcard-header" onclick="tog('689096c8')">
+        <div class="mcard-left">
+          <span class="mflag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+          <span class="mteam">England</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Croatia</span>
+          <span class="mflag">🇭🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 17 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-689096c8">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-689096c8">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-87afdb85">
+      <div class="mcard-header" onclick="tog('87afdb85')">
+        <div class="mcard-left">
+          <span class="mflag">🇬🇭</span>
+          <span class="mteam">Ghana</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Panama</span>
+          <span class="mflag">🇵🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 17 Jun · 23:00 UTC</span>
+          <span class="mchev" id="chev-87afdb85">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-87afdb85">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-22083e7a">
+      <div class="mcard-header" onclick="tog('22083e7a')">
+        <div class="mcard-left">
+          <span class="mflag">🇺🇿</span>
+          <span class="mteam">Uzbekistan</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Colombia</span>
+          <span class="mflag">🇨🇴</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 18 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-22083e7a">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-22083e7a">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-66ebb9e3">
+      <div class="mcard-header" onclick="tog('66ebb9e3')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇿</span>
+          <span class="mteam">Czech Republic</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">South Africa</span>
+          <span class="mflag">🇿🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 18 Jun · 16:00 UTC</span>
+          <span class="mchev" id="chev-66ebb9e3">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-66ebb9e3">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-289bc2e9">
+      <div class="mcard-header" onclick="tog('289bc2e9')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇭</span>
+          <span class="mteam">Switzerland</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Bosnia & Herzegovina</span>
+          <span class="mflag">🇧🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 18 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-289bc2e9">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-289bc2e9">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-fa950228">
+      <div class="mcard-header" onclick="tog('fa950228')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇦</span>
+          <span class="mteam">Canada</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Qatar</span>
+          <span class="mflag">🇶🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 18 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-fa950228">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-fa950228">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-0f2aeae6">
+      <div class="mcard-header" onclick="tog('0f2aeae6')">
+        <div class="mcard-left">
+          <span class="mflag">🇲🇽</span>
+          <span class="mteam">Mexico</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">South Korea</span>
+          <span class="mflag">🇰🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 19 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-0f2aeae6">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-0f2aeae6">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-065b3573">
+      <div class="mcard-header" onclick="tog('065b3573')">
+        <div class="mcard-left">
+          <span class="mflag">🇺🇸</span>
+          <span class="mteam">USA</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Australia</span>
+          <span class="mflag">🇦🇺</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 19 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-065b3573">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-065b3573">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-4cd769aa">
+      <div class="mcard-header" onclick="tog('4cd769aa')">
+        <div class="mcard-left">
+          <span class="mflag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+          <span class="mteam">Scotland</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Morocco</span>
+          <span class="mflag">🇲🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 19 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-4cd769aa">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-4cd769aa">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-ef0f74a9">
+      <div class="mcard-header" onclick="tog('ef0f74a9')">
+        <div class="mcard-left">
+          <span class="mflag">🇧🇷</span>
+          <span class="mteam">Brazil</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Haiti</span>
+          <span class="mflag">🇭🇹</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 20 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-ef0f74a9">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-ef0f74a9">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-f955d4b3">
+      <div class="mcard-header" onclick="tog('f955d4b3')">
+        <div class="mcard-left">
+          <span class="mflag">🇹🇷</span>
+          <span class="mteam">Turkey</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Paraguay</span>
+          <span class="mflag">🇵🇾</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 20 Jun · 03:00 UTC</span>
+          <span class="mchev" id="chev-f955d4b3">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f955d4b3">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-4f0c5185">
+      <div class="mcard-header" onclick="tog('4f0c5185')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇱</span>
+          <span class="mteam">Netherlands</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Sweden</span>
+          <span class="mflag">🇸🇪</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 20 Jun · 17:00 UTC</span>
+          <span class="mchev" id="chev-4f0c5185">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-4f0c5185">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-f1ab0f69">
+      <div class="mcard-header" onclick="tog('f1ab0f69')">
+        <div class="mcard-left">
+          <span class="mflag">🇩🇪</span>
+          <span class="mteam">Germany</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Ivory Coast</span>
+          <span class="mflag">🇨🇮</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 20 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-f1ab0f69">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f1ab0f69">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-681895f2">
+      <div class="mcard-header" onclick="tog('681895f2')">
+        <div class="mcard-left">
+          <span class="mflag">🇪🇨</span>
+          <span class="mteam">Ecuador</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Curaçao</span>
+          <span class="mflag">🇨🇼</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 21 Jun · 00:00 UTC</span>
+          <span class="mchev" id="chev-681895f2">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-681895f2">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-dfc5202c">
+      <div class="mcard-header" onclick="tog('dfc5202c')">
+        <div class="mcard-left">
+          <span class="mflag">🇹🇳</span>
+          <span class="mteam">Tunisia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Japan</span>
+          <span class="mflag">🇯🇵</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 21 Jun · 04:00 UTC</span>
+          <span class="mchev" id="chev-dfc5202c">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-dfc5202c">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-73529a24">
+      <div class="mcard-header" onclick="tog('73529a24')">
+        <div class="mcard-left">
+          <span class="mflag">🇪🇸</span>
+          <span class="mteam">Spain</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Saudi Arabia</span>
+          <span class="mflag">🇸🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 21 Jun · 16:00 UTC</span>
+          <span class="mchev" id="chev-73529a24">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-73529a24">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-5f92f257">
+      <div class="mcard-header" onclick="tog('5f92f257')">
+        <div class="mcard-left">
+          <span class="mflag">🇧🇪</span>
+          <span class="mteam">Belgium</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Iran</span>
+          <span class="mflag">🇮🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 21 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-5f92f257">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-5f92f257">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-852a3abe">
+      <div class="mcard-header" onclick="tog('852a3abe')">
+        <div class="mcard-left">
+          <span class="mflag">🇺🇾</span>
+          <span class="mteam">Uruguay</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Cape Verde</span>
+          <span class="mflag">🇨🇻</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 21 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-852a3abe">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-852a3abe">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-c1ec9a65">
+      <div class="mcard-header" onclick="tog('c1ec9a65')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇿</span>
+          <span class="mteam">New Zealand</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Egypt</span>
+          <span class="mflag">🇪🇬</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 22 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-c1ec9a65">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c1ec9a65">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-be6c63f4">
+      <div class="mcard-header" onclick="tog('be6c63f4')">
+        <div class="mcard-left">
+          <span class="mflag">🇦🇷</span>
+          <span class="mteam">Argentina</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Austria</span>
+          <span class="mflag">🇦🇹</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 22 Jun · 17:00 UTC</span>
+          <span class="mchev" id="chev-be6c63f4">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-be6c63f4">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-7ad7a0ce">
+      <div class="mcard-header" onclick="tog('7ad7a0ce')">
+        <div class="mcard-left">
+          <span class="mflag">🇫🇷</span>
+          <span class="mteam">France</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Iraq</span>
+          <span class="mflag">🇮🇶</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Mon 22 Jun · 21:00 UTC</span>
+          <span class="mchev" id="chev-7ad7a0ce">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-7ad7a0ce">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-3f484737">
+      <div class="mcard-header" onclick="tog('3f484737')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇴</span>
+          <span class="mteam">Norway</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Senegal</span>
+          <span class="mflag">🇸🇳</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 23 Jun · 00:00 UTC</span>
+          <span class="mchev" id="chev-3f484737">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-3f484737">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-fd8533b6">
+      <div class="mcard-header" onclick="tog('fd8533b6')">
+        <div class="mcard-left">
+          <span class="mflag">🇯🇴</span>
+          <span class="mteam">Jordan</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Algeria</span>
+          <span class="mflag">🇩🇿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 23 Jun · 03:00 UTC</span>
+          <span class="mchev" id="chev-fd8533b6">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-fd8533b6">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-8ba93d19">
+      <div class="mcard-header" onclick="tog('8ba93d19')">
+        <div class="mcard-left">
+          <span class="mflag">🇵🇹</span>
+          <span class="mteam">Portugal</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Uzbekistan</span>
+          <span class="mflag">🇺🇿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 23 Jun · 17:00 UTC</span>
+          <span class="mchev" id="chev-8ba93d19">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-8ba93d19">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-2f49dd8d">
+      <div class="mcard-header" onclick="tog('2f49dd8d')">
+        <div class="mcard-left">
+          <span class="mflag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+          <span class="mteam">England</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Ghana</span>
+          <span class="mflag">🇬🇭</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 23 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-2f49dd8d">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-2f49dd8d">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-c1bc8c26">
+      <div class="mcard-header" onclick="tog('c1bc8c26')">
+        <div class="mcard-left">
+          <span class="mflag">🇵🇦</span>
+          <span class="mteam">Panama</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Croatia</span>
+          <span class="mflag">🇭🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Tue 23 Jun · 23:00 UTC</span>
+          <span class="mchev" id="chev-c1bc8c26">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c1bc8c26">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-68bfc965">
+      <div class="mcard-header" onclick="tog('68bfc965')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇴</span>
+          <span class="mteam">Colombia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">DR Congo</span>
+          <span class="mflag">🇨🇩</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 24 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-68bfc965">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-68bfc965">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-512ac18b">
+      <div class="mcard-header" onclick="tog('512ac18b')">
+        <div class="mcard-left">
+          <span class="mflag">🇧🇦</span>
+          <span class="mteam">Bosnia & Herzegovina</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Qatar</span>
+          <span class="mflag">🇶🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 24 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-512ac18b">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-512ac18b">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-c9ef5822">
+      <div class="mcard-header" onclick="tog('c9ef5822')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇭</span>
+          <span class="mteam">Switzerland</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Canada</span>
+          <span class="mflag">🇨🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 24 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-c9ef5822">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c9ef5822">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-885ba958">
+      <div class="mcard-header" onclick="tog('885ba958')">
+        <div class="mcard-left">
+          <span class="mflag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+          <span class="mteam">Scotland</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Brazil</span>
+          <span class="mflag">🇧🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 24 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-885ba958">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-885ba958">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-d1279ce7">
+      <div class="mcard-header" onclick="tog('d1279ce7')">
+        <div class="mcard-left">
+          <span class="mflag">🇲🇦</span>
+          <span class="mteam">Morocco</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Haiti</span>
+          <span class="mflag">🇭🇹</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Wed 24 Jun · 22:00 UTC</span>
+          <span class="mchev" id="chev-d1279ce7">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-d1279ce7">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-5993bd51">
+      <div class="mcard-header" onclick="tog('5993bd51')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇿</span>
+          <span class="mteam">Czech Republic</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Mexico</span>
+          <span class="mflag">🇲🇽</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-5993bd51">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-5993bd51">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-c0355dfc">
+      <div class="mcard-header" onclick="tog('c0355dfc')">
+        <div class="mcard-left">
+          <span class="mflag">🇿🇦</span>
+          <span class="mteam">South Africa</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">South Korea</span>
+          <span class="mflag">🇰🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 01:00 UTC</span>
+          <span class="mchev" id="chev-c0355dfc">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-c0355dfc">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-a5a0b544">
+      <div class="mcard-header" onclick="tog('a5a0b544')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇼</span>
+          <span class="mteam">Curaçao</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Ivory Coast</span>
+          <span class="mflag">🇨🇮</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-a5a0b544">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-a5a0b544">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-0ec28b84">
+      <div class="mcard-header" onclick="tog('0ec28b84')">
+        <div class="mcard-left">
+          <span class="mflag">🇪🇨</span>
+          <span class="mteam">Ecuador</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Germany</span>
+          <span class="mflag">🇩🇪</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 20:00 UTC</span>
+          <span class="mchev" id="chev-0ec28b84">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-0ec28b84">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-0ed0233b">
+      <div class="mcard-header" onclick="tog('0ed0233b')">
+        <div class="mcard-left">
+          <span class="mflag">🇯🇵</span>
+          <span class="mteam">Japan</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Sweden</span>
+          <span class="mflag">🇸🇪</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 23:00 UTC</span>
+          <span class="mchev" id="chev-0ed0233b">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-0ed0233b">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-f3c4657d">
+      <div class="mcard-header" onclick="tog('f3c4657d')">
+        <div class="mcard-left">
+          <span class="mflag">🇹🇳</span>
+          <span class="mteam">Tunisia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Netherlands</span>
+          <span class="mflag">🇳🇱</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Thu 25 Jun · 23:00 UTC</span>
+          <span class="mchev" id="chev-f3c4657d">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f3c4657d">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-22f6ac06">
+      <div class="mcard-header" onclick="tog('22f6ac06')">
+        <div class="mcard-left">
+          <span class="mflag">🇵🇾</span>
+          <span class="mteam">Paraguay</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Australia</span>
+          <span class="mflag">🇦🇺</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 26 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-22f6ac06">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-22f6ac06">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-f41aeac9">
+      <div class="mcard-header" onclick="tog('f41aeac9')">
+        <div class="mcard-left">
+          <span class="mflag">🇹🇷</span>
+          <span class="mteam">Turkey</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">USA</span>
+          <span class="mflag">🇺🇸</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 26 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-f41aeac9">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-f41aeac9">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-b86b4d60">
+      <div class="mcard-header" onclick="tog('b86b4d60')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇴</span>
+          <span class="mteam">Norway</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">France</span>
+          <span class="mflag">🇫🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 26 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-b86b4d60">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-b86b4d60">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-7e6aee29">
+      <div class="mcard-header" onclick="tog('7e6aee29')">
+        <div class="mcard-left">
+          <span class="mflag">🇸🇳</span>
+          <span class="mteam">Senegal</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Iraq</span>
+          <span class="mflag">🇮🇶</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Fri 26 Jun · 19:00 UTC</span>
+          <span class="mchev" id="chev-7e6aee29">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-7e6aee29">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-e07b1926">
+      <div class="mcard-header" onclick="tog('e07b1926')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇻</span>
+          <span class="mteam">Cape Verde</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Saudi Arabia</span>
+          <span class="mflag">🇸🇦</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 00:00 UTC</span>
+          <span class="mchev" id="chev-e07b1926">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-e07b1926">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-dcff2e31">
+      <div class="mcard-header" onclick="tog('dcff2e31')">
+        <div class="mcard-left">
+          <span class="mflag">🇺🇾</span>
+          <span class="mteam">Uruguay</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Spain</span>
+          <span class="mflag">🇪🇸</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 00:00 UTC</span>
+          <span class="mchev" id="chev-dcff2e31">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-dcff2e31">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-581691da">
+      <div class="mcard-header" onclick="tog('581691da')">
+        <div class="mcard-left">
+          <span class="mflag">🇳🇿</span>
+          <span class="mteam">New Zealand</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Belgium</span>
+          <span class="mflag">🇧🇪</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 03:00 UTC</span>
+          <span class="mchev" id="chev-581691da">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-581691da">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-3e3b5fa2">
+      <div class="mcard-header" onclick="tog('3e3b5fa2')">
+        <div class="mcard-left">
+          <span class="mflag">🇪🇬</span>
+          <span class="mteam">Egypt</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Iran</span>
+          <span class="mflag">🇮🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 03:00 UTC</span>
+          <span class="mchev" id="chev-3e3b5fa2">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-3e3b5fa2">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-537c0997">
+      <div class="mcard-header" onclick="tog('537c0997')">
+        <div class="mcard-left">
+          <span class="mflag">🇭🇷</span>
+          <span class="mteam">Croatia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Ghana</span>
+          <span class="mflag">🇬🇭</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 21:00 UTC</span>
+          <span class="mchev" id="chev-537c0997">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-537c0997">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-4be17c8e">
+      <div class="mcard-header" onclick="tog('4be17c8e')">
+        <div class="mcard-left">
+          <span class="mflag">🇵🇦</span>
+          <span class="mteam">Panama</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">England</span>
+          <span class="mflag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 21:00 UTC</span>
+          <span class="mchev" id="chev-4be17c8e">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-4be17c8e">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-67ae5751">
+      <div class="mcard-header" onclick="tog('67ae5751')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇴</span>
+          <span class="mteam">Colombia</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Portugal</span>
+          <span class="mflag">🇵🇹</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 23:30 UTC</span>
+          <span class="mchev" id="chev-67ae5751">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-67ae5751">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-13eab94a">
+      <div class="mcard-header" onclick="tog('13eab94a')">
+        <div class="mcard-left">
+          <span class="mflag">🇨🇩</span>
+          <span class="mteam">DR Congo</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Uzbekistan</span>
+          <span class="mflag">🇺🇿</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sat 27 Jun · 23:30 UTC</span>
+          <span class="mchev" id="chev-13eab94a">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-13eab94a">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-8756200e">
+      <div class="mcard-header" onclick="tog('8756200e')">
+        <div class="mcard-left">
+          <span class="mflag">🇩🇿</span>
+          <span class="mteam">Algeria</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Austria</span>
+          <span class="mflag">🇦🇹</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 28 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-8756200e">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-8756200e">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    <div class="mcard card-dim" id="mc-54697f45">
+      <div class="mcard-header" onclick="tog('54697f45')">
+        <div class="mcard-left">
+          <span class="mflag">🇯🇴</span>
+          <span class="mteam">Jordan</span>
+          <span class="mvs">vs</span>
+          <span class="mteam">Argentina</span>
+          <span class="mflag">🇦🇷</span>
+          <span class="mbadge tbc-badge">Odds TBC</span>
+        </div>
+        <div class="mcard-right">
+          <span class="mdate">Sun 28 Jun · 02:00 UTC</span>
+          <span class="mchev" id="chev-54697f45">▾</span>
+        </div>
+      </div>
+      <div class="mcard-body" id="mb-54697f45">
+        <table class="mtable">
+          <thead>
+            <tr>
+              <th>RANK</th><th>PLAYER</th>
+              <th class="th-m">CAT DAD MODEL</th>
+              <th class="th-b">BOOKIE</th>
+              <th>EDGE <span class="th-info">ⓘ</span></th>
+              <th>BEST ODDS <span class="th-info">ⓘ</span></th>
+              <th>CONFIDENCE</th>
+            </tr>
+          </thead>
+          <tbody>
+<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
+          </tbody>
+        </table>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: 60% intl SOT rate + 40% bookie λ · position timing · FK specialist +12%. <span class="fk-tag">FK</span> = known free kick taker. Odds: William Hill "Over 0.5 SOT".</p>
+      </div>
+    </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- How it works -->
+    <div class="sb-section">
+      <div class="sb-title"><span><span class="sb-ico">🐱</span> How the Cat Dad Model Works</span><span class="sb-toggle">▾</span></div>
+      <p style="color:#64748b;font-size:.63rem;margin-bottom:9px">Four factors combined to estimate which player has the first shot on target.</p>
+      <div class="model-item">
+        <div class="mi-circle mi-green">60%</div>
+        <div><div class="mi-label">National Team SOT Rate</div><div class="mi-sub">SOT per 90 mins across 2022–2025 intl fixtures</div></div>
+      </div>
+      <div class="model-item">
+        <div class="mi-circle mi-blue">40%</div>
+        <div><div class="mi-label">Bookmaker Implied Rate</div><div class="mi-sub">William Hill "Over 0.5 SOT" → Poisson λ</div></div>
+      </div>
+      <div class="model-item">
+        <div class="mi-circle mi-purple">⚡</div>
+        <div><div class="mi-label">Position Timing</div><div class="mi-sub">Forwards/attackers +18% (shoot earlier in games)</div></div>
+      </div>
+      <div class="model-item">
+        <div class="mi-circle mi-amber">FK</div>
+        <div><div class="mi-label">Free Kick Specialist</div><div class="mi-sub">Known FK takers +12% (direct shot from set pieces)</div></div>
+      </div>
+      <div class="show-details">Show full details ▾</div>
+    </div>
+
+    <!-- Model Status -->
+    <div class="sb-section">
+      <div class="sb-title"><span><span class="sb-ico">📈</span> Model Status</span></div>
+      <div class="sb-stat"><span class="sb-stat-label">Total Matches</span><span class="sb-stat-val">72</span></div>
+      <div class="sb-stat"><span class="sb-stat-label">With Live Odds</span><span class="sb-stat-val">9</span></div>
+      <div class="sb-stat"><span class="sb-stat-label">Teams with National Data</span><span class="sb-stat-val">2</span></div>
+      <p class="sb-upd">Last Updated <span>09 Jun 2026 · 09:35 UTC</span></p>
+    </div>
+
+    <!-- Data Coverage -->
+    <div class="sb-section">
+      <div class="sb-title"><span><span class="sb-ico">📊</span> Data Coverage</span></div>
+      <div class="cov-item">
+        <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#1e2d3d" stroke-width="4"/><circle cx="20" cy="20" r="16" fill="none" stroke="#22c55e" stroke-width="4" stroke-dasharray="4.0 100.5" stroke-dashoffset="25.1" stroke-linecap="round"/><text x="20" y="20" text-anchor="middle" dy=".35em" fill="#22c55e" font-size="9" font-weight="700">4%</text></svg>
+        <div>
+          <div class="cov-label">National Team Data</div>
+          <div class="cov-sub">2 / 48 teams</div>
+        </div>
+      </div>
+      <div class="cov-item">
+        <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#1e2d3d" stroke-width="4"/><circle cx="20" cy="20" r="16" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="12.1 100.5" stroke-dashoffset="25.1" stroke-linecap="round"/><text x="20" y="20" text-anchor="middle" dy=".35em" fill="#3b82f6" font-size="9" font-weight="700">12%</text></svg>
+        <div>
+          <div class="cov-label">Bookmaker Odds</div>
+          <div class="cov-sub">9 / 72 matches</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edge Legend -->
+    <div class="sb-section">
+      <div class="sb-title"><span><span class="sb-ico">📋</span> Edge Legend</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:#22c55e;border:2px solid #22c55e66"></span> Strong Value <span class="leg-range">(≥ +1.5%)</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:#4ade80"></span> Slight Value <span class="leg-range">(+0.5% to +1.5%)</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:#2a3a5c"></span> Neutral <span class="leg-range">(−0.5% to +0.5%)</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:#fca5a5"></span> Slight Fade <span class="leg-range">(−0.5% to −1.5%)</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:#ef4444;border:2px solid #ef444466"></span> Strong Fade <span class="leg-range">(≤ −1.5%)</span></div>
+    </div>
+
+    <div class="disclaimer">
+      ⓘ This is a modelling tool, not betting advice. Bookmaker odds move quickly. Always check live prices before placing a bet.
+    </div>
+
+  </div><!-- /sidebar -->
+
+</div><!-- /main -->
+
+<script>
+// Toggle match cards
+function tog(id) {
+  var c = document.getElementById('mc-'+id);
+  var ch = document.getElementById('chev-'+id);
+  var open = c.classList.contains('open');
+  c.classList.toggle('open', !open);
+  if(ch) ch.classList.toggle('open', !open);
+}
+
+// Filter tabs
+var activeFilter = 'all';
+function filterMatches(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.ftab').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  applyFilters();
+}
+
+function searchMatches(q) {
+  document.getElementById('search-query', q);
+  applyFilters(q);
+}
+
+function applyFilters(searchQ) {
+  var q = (searchQ || document.querySelector('.search-wrap input').value || '').toLowerCase();
+  document.querySelectorAll('.mcard').forEach(function(card) {
+    var txt = card.textContent.toLowerCase();
+    var matchSearch = !q || txt.includes(q);
+    var matchFilter = true;
+    if(activeFilter === 'value') matchFilter = card.querySelector('.e-strong-val, .e-slight-val') !== null;
+    if(activeFilter === 'live')  matchFilter = !card.classList.contains('card-dim');
+    if(activeFilter === 'high')  matchFilter = card.querySelector('.conf-hi') !== null;
+    card.style.display = (matchSearch && matchFilter) ? '' : 'none';
+  });
+}
+
+// Auto-open first 3 matches with data
+var n=0;
+document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){
+  if(n<3){ var id=c.id.replace('mc-',''); tog(id); n++; }
+});
+</script>
+</body>
+</html>
