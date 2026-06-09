@@ -160,15 +160,22 @@ def build_predictions(event_odds, home, away, nat_agg, squads):
         model_lam = comb_lam * timing * fk_boost
         is_fk = name in FK_SPECIALISTS
 
-        # Determine team by checking squad + nat stats
-        team = away  # default
+        # Determine team — only assign if we can positively confirm, else leave blank
+        team = ""
         nl = name.lower()
+        # Check home squad data
         for p2 in squads.get(home, []):
-            if nl in p2["name"].lower() or p2["name"].lower() in nl:
+            if nl == p2["name"].lower() or nl in p2["name"].lower() or p2["name"].lower() in nl:
                 team = home; break
-        else:
-            if get_nat_stats(name, home, nat_agg):
-                team = home
+        # Check away squad data
+        if not team:
+            for p2 in squads.get(away, []):
+                if nl == p2["name"].lower() or nl in p2["name"].lower() or p2["name"].lower() in nl:
+                    team = away; break
+        # Fall back to nat stats
+        if not team:
+            if get_nat_stats(name, home, nat_agg): team = home
+            elif get_nat_stats(name, away, nat_agg): team = away
 
         players.append({
             "name": name, "pos": pos, "price": bi["price"], "bm": bi["bm"],
