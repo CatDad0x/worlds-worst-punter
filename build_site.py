@@ -1066,6 +1066,13 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .modal-section li{{margin-bottom:4px}}
 .modal-section strong{{color:#f1f5f9}}
 .modal-formula{{background:#080d18;border:1px solid #1a2540;border-radius:7px;padding:12px 14px;font-family:monospace;font-size:.75rem;color:#22c55e;margin:10px 0;line-height:1.8}}
+.mw-table{{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:4px}}
+.mw-table th{{background:#0d1424;color:#64748b;font-weight:700;font-size:.62rem;letter-spacing:.4px;padding:7px 10px;text-align:left;border-bottom:1px solid #1a2540}}
+.mw-table td{{padding:8px 10px;vertical-align:top;color:#e2e8f0;border-bottom:1px solid #111d30;line-height:1.55}}
+.mw-table td:first-child{{font-weight:700;color:#f1f5f9;white-space:nowrap}}
+.mw-table td:nth-child(2){{color:#22c55e;font-weight:800;white-space:nowrap}}
+.mw-table tr:last-child td{{border-bottom:none}}
+.mw-table tr:hover td{{background:#0d1f35}}
 .modal-factor{{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1a2540}}
 .modal-factor:last-child{{border-bottom:none}}
 .mf-circle{{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;margin-top:1px}}
@@ -1470,99 +1477,91 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
     <div class="modal-body">
 
       <div class="modal-section">
-        <h3>🎯 The Bet</h3>
-        <p><strong>First Shot on Target</strong> — you pick one player to have the first shot on target in a match. It doesn't need to be a goal, just any attempt that forces the goalkeeper to save. This is a prop bet offered by William Hill, Unibet, and others. It's a niche market, which means bookmakers sometimes misprice it — that's our edge.</p>
+        <p style="color:#94a3b8;font-size:.75rem;line-height:1.6">The model runs in two steps.</p>
       </div>
 
       <div class="modal-section">
-        <h3>🧠 The Core Idea — Two Steps</h3>
-        <p>We don't just ask <em>"who shoots the most?"</em> — we ask <em>"who generates the first shot before everyone else?"</em> That's a different problem. We solve it in two steps:</p>
-        <div class="modal-formula">
-          Step 1 · Which team gets the first SOT?<br>
-          Step 2 · Which player on that team pulls the trigger?<br><br>
-          P(player first SOT) = P(team first SOT) × P(player | team shoots first)
-        </div>
-        <p><strong>Why this matters:</strong> Market-implied team strength is used to estimate which side is more likely to generate the game's first attacking sequence. A player with strong individual stats on a passive, defensive team will rank lower than a similar player on a high-tempo team expected to attack early.</p>
-      </div>
-
-      <hr class="modal-divider">
-
-      <div class="modal-section">
-        <h3>⚙️ Step 1 — Which Team Shoots First?</h3>
-        <div class="modal-factor">
-          <div class="mf-circle mi-blue" style="font-size:.55rem">H2H</div>
-          <div>
-            <div class="mf-title">Match Win Odds + Team Attacking Tempo</div>
-            <div class="mf-desc">We blend two signals: <strong>(1)</strong> bookmaker match winner odds — the favourite is more likely to attack first, and favourites tend to generate the game's first meaningful attacking sequence more often than underdogs. <strong>(2)</strong> Team-level SOT rate from national squad data — high-tempo teams (Spain, France, Brazil) generate more early shots regardless of opponent. These are blended 70/30 to get <strong>P(team gets first SOT)</strong>.</div>
-          </div>
-        </div>
+        <h3>Step 1 — Which team gets the first shot?</h3>
+        <p style="color:#94a3b8;font-size:.73rem;line-height:1.6;margin-top:4px">Uses match winner odds (70%) and each team's real attacking SOT rate from national stats (30%) to calculate the probability each team attacks first. Market-implied team strength is the primary signal — stronger teams generate the game's first meaningful attacking sequence more often than underdogs. Derived from the bookmaker's win/draw/loss prices using Poisson maths.</p>
       </div>
 
       <div class="modal-section">
-        <h3>⚙️ Step 2 — Which Player on That Team?</h3>
-        <p style="margin-bottom:10px">Once we know which team is likely to shoot first, we rank players within that team using five factors:</p>
+        <h3>Step 2 — Which player on that team?</h3>
+        <p style="color:#94a3b8;font-size:.73rem;line-height:1.6;margin-top:4px;margin-bottom:12px">Once we know which team is likely to shoot first, we rank players within that team using these factors:</p>
 
-        <div class="modal-factor">
-          <div class="mf-circle mi-green" style="font-size:.6rem">SOT</div>
-          <div>
-            <div class="mf-title">Bookmaker Markets &amp; National Shooting Stats <span style="color:#64748b;font-weight:400;font-size:.7rem">High importance</span></div>
-            <div class="mf-desc">The dominant signal is the bookmaker's own "Over 0.5 SOT" market — it already prices in injuries, likely lineups, current form, and matchup. We blend it with each player's <strong>shots on target per 90 for their national team</strong> (2022–2025). National data beats club stats because roles differ internationally. The bookmaker signal carries ~42% weight; national stats ~18%.</div>
-          </div>
-        </div>
-
-        <div class="modal-factor">
-          <div class="mf-circle mi-purple">⚡</div>
-          <div>
-            <div class="mf-title">Early-Game Tendency <span style="color:#64748b;font-weight:400;font-size:.7rem">High importance</span></div>
-            <div class="mf-desc">This market isn't about who shoots most over 90 minutes — it's about who shoots <em>first</em>. High-press forwards (Mbappe, Son, Saka, Vinicius Jr) attempt shots in the opening 10–15 minutes far more often than ball-retention midfielders. Where available, we use StatsBomb WC event data to measure actual early-shot %. ⚡ badge = confirmed early shooter.</div>
-          </div>
-        </div>
-
-        <div class="modal-factor">
-          <div class="mf-circle" style="background:#8b5cf622;color:#a78bfa;border:2px solid #8b5cf644;font-size:.6rem">POS</div>
-          <div>
-            <div class="mf-title">Position &amp; Tactical Role <span style="color:#64748b;font-weight:400;font-size:.7rem">Medium importance</span></div>
-            <div class="mf-desc">A central striker and a left-back are not comparable. Attackers carry a <strong>+28% multiplier</strong>; defenders a <strong>−28% discount</strong>. This is the single biggest within-team differentiator after the bookmaker signal.</div>
-          </div>
-        </div>
-
-        <div class="modal-factor">
-          <div class="mf-circle" style="background:#06b6d422;color:#22d3ee;border:2px solid #06b6d444;font-size:.55rem">ATK</div>
-          <div>
-            <div class="mf-title">Team Attacking Style <span style="color:#64748b;font-weight:400;font-size:.7rem">Medium importance</span></div>
-            <div class="mf-desc">Spain's players benefit from Spain's high-tempo attacking system. Saudi Arabia's players are discounted for the opposite reason. We compute each team's aggregate national-team SOT rate and apply it as an 8% modifier — high-press teams get a modest boost, defensive teams a modest discount.</div>
-          </div>
-        </div>
-
-        <div class="modal-factor">
-          <div class="mf-circle mi-amber">FK</div>
-          <div>
-            <div class="mf-title">Free Kick Specialist <span style="color:#64748b;font-weight:400;font-size:.7rem">Low importance</span></div>
-            <div class="mf-desc">Most first SOTs come from open play, but if a foul is won in the first 5 minutes the designated FK taker walks up and shoots. We track known specialists (Son, Griezmann, Bruno Fernandes, Messi) with a <strong>+7% boost</strong>. FK badge = verified taker.</div>
-          </div>
-        </div>
-
-        <div class="modal-factor">
-          <div class="mf-circle" style="background:#ef444422;color:#ef4444;border:2px solid #ef444444;font-size:.55rem">⚠</div>
-          <div>
-            <div class="mf-title">Injury / Availability <span style="color:#64748b;font-weight:400;font-size:.7rem">Dynamic</span></div>
-            <div class="mf-desc">A player with a 10% model probability becomes near-zero if he's doubtful to start. We apply a <strong>−65% penalty</strong> to confirmed injury doubts. The bookmaker odds often lag on fitness news — this is where we can find real edge. ⚠ DOUBT badge = flagged as uncertain starter.</div>
-          </div>
-        </div>
+        <table class="mw-table">
+          <thead>
+            <tr><th>Factor</th><th>Weight</th><th>What it uses</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📊 Bookmaker signal</td>
+              <td>42%</td>
+              <td>William Hill/1xBet "Over 0.5 SOT" odds converted to a shot rate. Already prices in injuries, likely lineups &amp; current form.</td>
+            </tr>
+            <tr>
+              <td>🌍 National team stats</td>
+              <td>18%</td>
+              <td>Shots on target per 90 mins for their country — 60% weight on 2025/26, 25% on 2024/25, 10% on 2023/24. National role matters more than club role for this market.</td>
+            </tr>
+            <tr>
+              <td>🏟 Club form</td>
+              <td>Blended</td>
+              <td>2025/26 club stats merged at 60% national / 40% club — because players shoot differently for country vs club.</td>
+            </tr>
+            <tr>
+              <td>⚡ Early-game timing</td>
+              <td>15%</td>
+              <td>Shot-by-minute event data from 233 matches — Euro 2024, Copa America 2024, AFCON 2023, WC 2022. Tracks who shoots in the first 10 mins vs the 50th.</td>
+            </tr>
+            <tr>
+              <td>🎯 Position &amp; role</td>
+              <td>15%</td>
+              <td>Forwards/attackers +28% — they shoot earlier in games. Defenders −28%. Goalkeepers near zero.</td>
+            </tr>
+            <tr>
+              <td>🌐 Team attacking style</td>
+              <td>8%</td>
+              <td>Team's aggregate national SOT rate. High-tempo teams (Spain, France, Brazil) get a boost; defensive sides get a discount.</td>
+            </tr>
+            <tr>
+              <td>🔵 Set piece takers</td>
+              <td>3%</td>
+              <td>Known free kick specialists +7% — a direct FK in the first 5 mins is one of the most common early SOTs.</td>
+            </tr>
+            <tr>
+              <td>⚠️ Injury flag</td>
+              <td>Dynamic</td>
+              <td>Confirmed doubts get −65%. Bookmaker odds often lag on late fitness news — this is where we find edge.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <hr class="modal-divider">
 
       <div class="modal-section">
         <h3>📐 Reading the Edge</h3>
-        <p><strong>Edge = Cat Dad Model % − Bookmaker Implied %</strong></p>
-        <p style="margin-top:6px">The bookmaker implied % is calculated by normalising their "Over 0.5 SOT" odds across all players in the match — it tells you what the market thinks. Our model % is our independent estimate. The gap between them is the edge.</p>
+        <p style="color:#94a3b8;font-size:.73rem;margin-top:4px"><strong style="color:#f1f5f9">Edge = Cat Dad Model % − Bookmaker Implied %</strong></p>
+        <p style="margin-top:6px;font-size:.72rem;color:#94a3b8">The bookmaker implied % is calculated by normalising their "Over 0.5 SOT" odds across all players in the match. Our model % is our independent estimate. The gap is the edge.</p>
         <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-val">+2.1% Strong</span><span style="font-size:.75rem;color:#94a3b8">Our model rates this player significantly higher than the market. Potential value bet.</span></div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-slight-val">+0.8% Slight</span><span style="font-size:.75rem;color:#94a3b8">Small disagreement. Worth noting but not a strong signal.</span></div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-neutral">Neutral</span><span style="font-size:.75rem;color:#94a3b8">Model and market agree. No edge either way.</span></div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-fad">−2.0% Fade</span><span style="font-size:.75rem;color:#94a3b8">Market is overrating this player vs our model. Consider avoiding.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-val">+2.1% Strong</span><span style="font-size:.72rem;color:#94a3b8">Our model rates this player significantly higher than the market. Potential value bet.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-slight-val">+0.8% Slight</span><span style="font-size:.72rem;color:#94a3b8">Small disagreement. Worth noting but not a strong signal.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-neutral">Neutral</span><span style="font-size:.72rem;color:#94a3b8">Model and market agree. No edge either way.</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-fad">−2.0% Fade</span><span style="font-size:.72rem;color:#94a3b8">Market is overrating this player vs our model. Consider avoiding.</span></div>
         </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <div class="modal-section">
+        <h3>📋 Data</h3>
+        <ul style="color:#94a3b8;font-size:.72rem;line-height:1.9;padding-left:16px">
+          <li>48 teams · 2,992 players · 1,328 with shot timing data</li>
+          <li>Odds: William Hill, Unibet, 1xBet — updated daily</li>
+          <li>Season weights: 2026 = 60%, 2025 = 25%, 2024 = 10%, older = 5%</li>
+          <li>Shot timing: Euro 2024, Copa America 2024, AFCON 2023, WC 2022 event data</li>
+        </ul>
       </div>
 
       <hr class="modal-divider">
