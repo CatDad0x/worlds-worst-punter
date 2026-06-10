@@ -134,8 +134,8 @@ def find_player_team(name):
     return ""
 
 POS_TIMING = {
-    "Attacker": 1.18, "Forward": 1.18,
-    "Midfielder": 1.0, "Defender": 0.80,
+    "Attacker": 1.28, "Forward": 1.28,
+    "Midfielder": 1.0, "Defender": 0.72,
     "Goalkeeper": 0.20, "Unknown": 1.0,
 }
 
@@ -289,6 +289,36 @@ def get_nat_stats(name, team, nat_agg):
             return s
     return None
 
+def compute_team_attack_profiles(nat_agg):
+    """
+    For each team, compute average sot_per90 across attackers/midfielders.
+    Returns {team: multiplier} where 1.0 = average attack tempo.
+    Range ~0.88–1.12 — used in Step 1 blending and player model.
+    """
+    raw = {}
+    for team, players in nat_agg.items():
+        sots = [
+            p["sot_per90"]
+            for p in players.values()
+            if p.get("pos") in ("Attacker", "Forward", "Midfielder")
+            and p.get("sot_per90", 0) > 0
+        ]
+        raw[team] = sum(sots) / len(sots) if sots else None
+
+    vals = [v for v in raw.values() if v is not None]
+    if not vals:
+        return {t: 1.0 for t in nat_agg}
+    mean_sot = sum(vals) / len(vals)
+
+    profiles = {}
+    for team, sot in raw.items():
+        if sot is None:
+            profiles[team] = 1.0
+        else:
+            mult = 1.0 + (sot / mean_sot - 1.0) * 0.20
+            profiles[team] = min(max(mult, 0.88), 1.12)
+    return profiles
+
 def confidence(has_nat, edge, team_prob_known, has_sb):
     """
     Data quality score — how much independent evidence backs this prediction.
@@ -305,13 +335,12 @@ def confidence(has_nat, edge, team_prob_known, has_sb):
     return "Low"
 
 # ── STEP 1: Team first-SOT probability ─────────────────────────────────────
-def get_team_first_sot_probs(event_odds, home, away):
+def get_team_first_sot_probs(event_odds, home, away, team_profiles=None):
     """
-    Two-step model step 1:
-    P(team gets first SOT) derived from h2h odds.
-    The stronger team (higher win probability) is more likely to attack first.
-    Adjusted by match total (higher total → faster first SOT overall).
-    Returns (p_home, p_away, total_line)
+    P(team gets first SOT) blended from two signals:
+      70% h2h odds (match winner market, best available proxy for first-goal market)
+      30% team attack profile (team-level SOT rate from national stats)
+    Returns (p_home, p_away, total_line, team_known)
     """
     home_win_prob = away_win_prob = draw_prob = None
     total_line = 2.5  # default
@@ -321,8 +350,8 @@ def get_team_first_sot_probs(event_odds, home, away):
             if mkt["key"] == "h2h" and home_win_prob is None:
                 for o in mkt["outcomes"]:
                     p = 1 / o["price"]
-                    if o["name"] == home:   home_win_prob = p
-                    elif o["name"] == away: away_win_prob = p
+                    if o["name"] == home:     home_win_prob = p
+                    elif o["name"] == away:   away_win_prob = p
                     elif o["name"] == "Draw": draw_prob = p
             if mkt["key"] == "totals":
                 for o in mkt["outcomes"]:
@@ -337,15 +366,29 @@ def get_team_first_sot_probs(event_odds, home, away):
         aw = away_win_prob / total_imp
         dw = draw_prob / total_imp
 
-        # P(team first SOT) ≈ P(win) + 0.45*P(draw)
-        # (favourites attack first ~65% when they win, draws roughly split)
-        p_home_raw = hw + 0.45 * dw
-        p_away_raw = aw + 0.45 * dw
-        # Normalise to sum to 1
-        total = p_home_raw + p_away_raw
-        p_home = p_home_raw / total
-        p_away = p_away_raw / total
-        return p_home, p_away, total_line, True
+        # h2h signal: P(win) + 0.45*P(draw) — attacks first ~65% when winning
+        p_h2h_home = hw + 0.45 * dw
+        p_h2h_away = aw + 0.45 * dw
+        norm = p_h2h_home + p_h2h_away
+        p_h2h_home /= norm
+        p_h2h_away /= norm
+
+        # Team attack profile signal (SOT rate ratio)
+        if team_profiles:
+            home_prof = team_profiles.get(home, 1.0)
+            away_prof = team_profiles.get(away, 1.0)
+            sot_total = home_prof + away_prof
+            p_sot_home = home_prof / sot_total
+            p_sot_away = away_prof / sot_total
+        else:
+            p_sot_home = p_sot_away = 0.5
+
+        # Blend: 70% h2h + 30% team SOT profile
+        p_home = 0.70 * p_h2h_home + 0.30 * p_sot_home
+        p_away = 0.70 * p_h2h_away + 0.30 * p_sot_away
+        # Renormalise
+        total = p_home + p_away
+        return p_home / total, p_away / total, total_line, True
     else:
         return 0.5, 0.5, total_line, False
 
@@ -355,14 +398,14 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
     Two-step model:
       P(player first SOT) = P(team first SOT) × P(player | team first SOT)
 
-    Weights (v1):
-      35% bookmaker SOT implied rate (Poisson λ)
-      25% national team SOT/90
-      15% early-game tendency (curated list + position timing)
-      10% tactical role/position
-       7.5% team/opponent matchup (game total proxy)
-       5% set-piece / FK responsibility
-       2.5% injury/availability penalty
+    Weights (v2):
+      ~42% bookmaker SOT implied rate (Poisson λ) — dominant signal
+      ~18% national team SOT/90
+      15% early-game tendency (StatsBomb timing or curated list)
+      15% tactical role/position (attacker vs defender)
+       8% team attacking style (team-level SOT tempo)
+       3% set-piece / FK responsibility
+       hard penalty: injury/availability
 
     bm_pct uses raw bookmaker λ normalised — our benchmark.
     model_pct uses the full weighted model.
@@ -381,8 +424,13 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
 
     if not bookie_data: return []
 
+    # Pre-compute team attack profiles and pass to Step 1
+    team_profiles = compute_team_attack_profiles(nat_agg)
+
     # Step 1: team-level first SOT probabilities
-    p_home_team, p_away_team, total_line, team_known = get_team_first_sot_probs(event_odds, home, away)
+    p_home_team, p_away_team, total_line, team_known = get_team_first_sot_probs(
+        event_odds, home, away, team_profiles
+    )
 
     # Total line modifier: high-scoring game → first SOT comes sooner → spread wider
     # We use it as a slight boost for the stronger team's players (effect already in h2h)
@@ -411,10 +459,10 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
             has_nat  = False
             nat_apps = nat_sot = None
 
-        # Weighted base rate: 35% bookie + 25% national (+ 40% bookie if no nat data)
+        # Weighted base rate: 42% bookie + 18% national (+ 40% bookie if no nat data)
+        # Effective when has_nat: 0.82 * bm_lam + 0.18 * nat_lam
         if has_nat:
-            base_lam = 0.35 * bm_lam + 0.25 * nat_lam + 0.40 * bm_lam
-            # simplifies to: 0.75 * bm_lam + 0.25 * nat_lam
+            base_lam = 0.42 * bm_lam + 0.18 * nat_lam + 0.40 * bm_lam
         else:
             base_lam = bm_lam
 
@@ -438,19 +486,22 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
             early_mult = 1.15 if name in EARLY_SHOOTERS else 1.0
             has_sb = False
 
-        # --- Set piece / FK (5%) ---
-        fk_mult = 1.12 if name in FK_SPECIALISTS else 1.0
+        # --- Set piece / FK (3%) ---
+        fk_mult = 1.07 if name in FK_SPECIALISTS else 1.0
 
         # --- Injury / availability (2.5% weight — hard penalty) ---
         injured    = name in INJURED_DOUBTFUL
         inj_mult   = 0.35 if injured else 1.0
 
-        # Final model lambda
-        model_lam = base_lam * timing * early_mult * fk_mult * inj_mult
-
         # Which team
         team = find_player_team(name)
         is_home = (team == home)
+
+        # --- Team attacking style (8%) ---
+        attack_mult = team_profiles.get(team, 1.0) if team and team_profiles else 1.0
+
+        # Final model lambda
+        model_lam = base_lam * timing * early_mult * attack_mult * fk_mult * inj_mult
 
         players.append({
             "name": name, "pos": pos, "price": bi["price"], "bm": bi["bm"],
@@ -1117,19 +1168,23 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
       <p style="color:#64748b;font-size:.62rem;margin-bottom:9px">Two-step model: which team shoots first, then which player.</p>
       <div class="model-item">
         <div class="mi-circle mi-blue" style="font-size:.55rem">H2H</div>
-        <div><div class="mi-label">Step 1 · Team First SOT</div><div class="mi-sub">Win odds → P(team attacks first)</div></div>
+        <div><div class="mi-label">Step 1 · Team First SOT</div><div class="mi-sub">Win odds (70%) + team SOT tempo (30%)</div></div>
       </div>
       <div class="model-item">
         <div class="mi-circle mi-green" style="font-size:.55rem">SOT</div>
-        <div><div class="mi-label">Step 2 · Player Shot Rate</div><div class="mi-sub">35% bookie λ + 25% intl SOT/90</div></div>
+        <div><div class="mi-label">Step 2 · Player Shot Rate</div><div class="mi-sub">Bookmaker markets (High) + national stats (High)</div></div>
       </div>
       <div class="model-item">
         <div class="mi-circle mi-purple">⚡</div>
-        <div><div class="mi-label">Early-Game Tendency</div><div class="mi-sub">High-press forwards shoot in first 15 mins</div></div>
+        <div><div class="mi-label">Early-Game Tendency</div><div class="mi-sub">StatsBomb timing · position role (Medium)</div></div>
+      </div>
+      <div class="model-item">
+        <div class="mi-circle" style="background:#06b6d422;color:#22d3ee;border:2px solid #06b6d444;font-size:.55rem">ATK</div>
+        <div><div class="mi-label">Team Attacking Style</div><div class="mi-sub">High-tempo teams boost all players (Medium)</div></div>
       </div>
       <div class="model-item">
         <div class="mi-circle mi-amber">FK</div>
-        <div><div class="mi-label">Set Piece Specialist</div><div class="mi-sub">FK takers +12% · Injury doubts −65%</div></div>
+        <div><div class="mi-label">Set Piece Specialist</div><div class="mi-sub">FK takers +7% · Injury doubts −65% (Low/Dynamic)</div></div>
       </div>
       <div class="show-details" onclick="openModal()">Show full details ▾</div>
     </div>
@@ -1275,7 +1330,7 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
           Step 2 · Which player on that team pulls the trigger?<br><br>
           P(player first SOT) = P(team first SOT) × P(player | team shoots first)
         </div>
-        <p><strong>Why this matters:</strong> If Mexico are 80% likely to get the first SOT (they're big favourites), Mexican strikers should dominate the rankings — even if a South African player has great individual stats.</p>
+        <p><strong>Why this matters:</strong> Market-implied team strength is used to estimate which side is more likely to generate the game's first attacking sequence. A player with strong individual stats on a passive, defensive team will rank lower than a similar player on a high-tempo team expected to attack early.</p>
       </div>
 
       <hr class="modal-divider">
@@ -1285,8 +1340,8 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
         <div class="modal-factor">
           <div class="mf-circle mi-blue" style="font-size:.55rem">H2H</div>
           <div>
-            <div class="mf-title">Match Win Odds → Team Attack Probability</div>
-            <div class="mf-desc">We convert the bookmaker's match winner odds into a probability that each team generates the first SOT. The stronger team (shorter price to win) attacks first in roughly 65% of matches they win, and 50/50 in draws. We weight these to get <strong>P(team gets first SOT)</strong>. Example: Mexico 1.36 to win → ~79% chance they get first SOT.</div>
+            <div class="mf-title">Match Win Odds + Team Attacking Tempo</div>
+            <div class="mf-desc">We blend two signals: <strong>(1)</strong> bookmaker match winner odds — the favourite is more likely to attack first, and favourites tend to generate the game's first meaningful attacking sequence more often than underdogs. <strong>(2)</strong> Team-level SOT rate from national squad data — high-tempo teams (Spain, France, Brazil) generate more early shots regardless of opponent. These are blended 70/30 to get <strong>P(team gets first SOT)</strong>.</div>
           </div>
         </div>
       </div>
@@ -1298,31 +1353,47 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
         <div class="modal-factor">
           <div class="mf-circle mi-green" style="font-size:.6rem">SOT</div>
           <div>
-            <div class="mf-title">International Shooting Stats <span style="color:#64748b;font-weight:400;font-size:.7rem">(35% bookie + 25% nat stats)</span></div>
-            <div class="mf-desc">We use each player's <strong>shots on target per 90 minutes for their national team</strong> (2022–2025: World Cup, Nations League, qualifiers). This beats club stats because players have different roles for their country — a striker who shoots 3× a game at club level may play deeper internationally. The bookmaker's "Over 0.5 SOT" odds fill the gaps where we lack data.</div>
+            <div class="mf-title">Bookmaker Markets &amp; National Shooting Stats <span style="color:#64748b;font-weight:400;font-size:.7rem">High importance</span></div>
+            <div class="mf-desc">The dominant signal is the bookmaker's own "Over 0.5 SOT" market — it already prices in injuries, likely lineups, current form, and matchup. We blend it with each player's <strong>shots on target per 90 for their national team</strong> (2022–2025). National data beats club stats because roles differ internationally. The bookmaker signal carries ~42% weight; national stats ~18%.</div>
           </div>
         </div>
 
         <div class="modal-factor">
           <div class="mf-circle mi-purple">⚡</div>
           <div>
-            <div class="mf-title">Early-Game Tendency <span style="color:#64748b;font-weight:400;font-size:.7rem">(15%)</span></div>
-            <div class="mf-desc">This market isn't about who shoots most over 90 minutes — it's about who shoots <em>first</em>. High-press forwards (Mbappe, Son, Saka, Vinicius Jr) attempt shots in the opening 10–15 minutes far more often than ball-retention midfielders. We apply a <strong>+15% boost</strong> to known early-game attackers. ⚡ badge = confirmed early shooter.</div>
+            <div class="mf-title">Early-Game Tendency <span style="color:#64748b;font-weight:400;font-size:.7rem">High importance</span></div>
+            <div class="mf-desc">This market isn't about who shoots most over 90 minutes — it's about who shoots <em>first</em>. High-press forwards (Mbappe, Son, Saka, Vinicius Jr) attempt shots in the opening 10–15 minutes far more often than ball-retention midfielders. Where available, we use StatsBomb WC event data to measure actual early-shot %. ⚡ badge = confirmed early shooter.</div>
+          </div>
+        </div>
+
+        <div class="modal-factor">
+          <div class="mf-circle" style="background:#8b5cf622;color:#a78bfa;border:2px solid #8b5cf644;font-size:.6rem">POS</div>
+          <div>
+            <div class="mf-title">Position &amp; Tactical Role <span style="color:#64748b;font-weight:400;font-size:.7rem">Medium importance</span></div>
+            <div class="mf-desc">A central striker and a left-back are not comparable. Attackers carry a <strong>+28% multiplier</strong>; defenders a <strong>−28% discount</strong>. This is the single biggest within-team differentiator after the bookmaker signal.</div>
+          </div>
+        </div>
+
+        <div class="modal-factor">
+          <div class="mf-circle" style="background:#06b6d422;color:#22d3ee;border:2px solid #06b6d444;font-size:.55rem">ATK</div>
+          <div>
+            <div class="mf-title">Team Attacking Style <span style="color:#64748b;font-weight:400;font-size:.7rem">Medium importance</span></div>
+            <div class="mf-desc">Spain's players benefit from Spain's high-tempo attacking system. Saudi Arabia's players are discounted for the opposite reason. We compute each team's aggregate national-team SOT rate and apply it as an 8% modifier — high-press teams get a modest boost, defensive teams a modest discount.</div>
           </div>
         </div>
 
         <div class="modal-factor">
           <div class="mf-circle mi-amber">FK</div>
           <div>
-            <div class="mf-title">Free Kick Specialist <span style="color:#64748b;font-weight:400;font-size:.7rem">(5%)</span></div>
-            <div class="mf-desc">Free kicks inside the final third are one of the most common sources of early shots on target. If a foul is won in the first 5 minutes, the designated FK taker walks up and shoots. We track known specialists (Son, Griezmann, Bruno Fernandes, De Bruyne, Messi) with a <strong>+12% boost</strong>. FK badge = verified taker.</div>
+            <div class="mf-title">Free Kick Specialist <span style="color:#64748b;font-weight:400;font-size:.7rem">Low importance</span></div>
+            <div class="mf-desc">Most first SOTs come from open play, but if a foul is won in the first 5 minutes the designated FK taker walks up and shoots. We track known specialists (Son, Griezmann, Bruno Fernandes, Messi) with a <strong>+7% boost</strong>. FK badge = verified taker.</div>
           </div>
         </div>
 
         <div class="modal-factor">
           <div class="mf-circle" style="background:#ef444422;color:#ef4444;border:2px solid #ef444444;font-size:.55rem">⚠</div>
           <div>
-            <div class="mf-title">Injury / Availability <span style="color:#64748b;font-weight:400;font-size:.7rem">(hard penalty)</span></div>
+            <div class="mf-title">Injury / Availability <span style="color:#64748b;font-weight:400;font-size:.7rem">Dynamic</span></div>
             <div class="mf-desc">A player with a 10% model probability becomes near-zero if he's doubtful to start. We apply a <strong>−65% penalty</strong> to confirmed injury doubts. The bookmaker odds often lag on fitness news — this is where we can find real edge. ⚠ DOUBT badge = flagged as uncertain starter.</div>
           </div>
         </div>
@@ -1349,7 +1420,8 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
         <ul>
           <li><strong>Confirmed lineups</strong> — we don't yet factor in whether a player is starting. A high-probability player who's on the bench is worthless. Always check team news before betting.</li>
           <li><strong>Shot timing data</strong> — ✅ Now integrated from StatsBomb WC 2018 + 2022 event data. Players with real early-shot % data get a data-driven timing multiplier.</li>
-          <li><strong>Opponent defensive profile</strong> — we don't yet adjust for how many early SOTs each opponent concedes. Coming in v2.</li>
+          <li><strong>Team attacking style</strong> — ✅ Now integrated. High-tempo teams receive a boost in both Step 1 and the player model.</li>
+          <li><strong>Opponent defensive profile</strong> — we don't yet adjust for position-specific concession rates (e.g. a team that gives up lots of early winger shots). Coming in v3.</li>
           <li>Positive edge does not guarantee profit. This is a tool, not a guarantee.</li>
         </ul>
       </div>
