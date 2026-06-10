@@ -1308,7 +1308,7 @@ function copySlip(slipId) {{
     var val = r.querySelector('.slip-val');
     if(lbl && val) lines.push(lbl.innerText + ' ' + val.innerText);
   }});
-  var text = lines.join('\n');
+  var text = lines.join('\\n');
   navigator.clipboard.writeText(text).then(function() {{
     var btn = document.querySelector('#' + slipId + ' .slip-copy');
     if(btn) {{ btn.innerText = 'Copied!'; setTimeout(function(){{ btn.innerText = 'Copy'; }}, 1800); }}
