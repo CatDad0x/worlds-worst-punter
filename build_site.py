@@ -368,6 +368,36 @@ def get_nat_stats(name, team, nat_agg):
 
     return None
 
+def get_club_stats(name, team, club_data):
+    """
+    Fall back to club stats when a player has no national data.
+    club_data = cache/club_stats_raw.json keyed by player ID.
+    Returns the club entry or None.
+    """
+    nl = _norm(name)
+    nl_words = [w for w in nl.split() if len(w) >= 2]
+    best = None
+    best_score = 0
+    for pid, p in club_data.items():
+        if p.get("nat_team") != team:
+            continue
+        if not p.get("minutes", 0):
+            continue
+        sname = _norm(p.get("name", ""))
+        swords = sname.split()
+        # Score by word overlap
+        score = len(set(nl_words) & set(swords))
+        if sname == nl:
+            return p
+        if score > best_score:
+            best_score = score
+            best = p
+        elif score == best_score and best_score > 0:
+            # Prefer longer name match
+            if len(sname) > len(best.get("name","") if best else ""):
+                best = p
+    return best if best_score >= 1 else None
+
 def compute_team_attack_profiles(nat_agg):
     """
     For each team, compute average sot_per90 across attackers/midfielders.
@@ -472,7 +502,7 @@ def get_team_first_sot_probs(event_odds, home, away, team_profiles=None):
         return 0.5, 0.5, total_line, False
 
 # ── STEP 2: Player first-SOT within their team ─────────────────────────────
-def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
+def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None, club_data=None):
     """
     Two-step model:
       P(player first SOT) = P(team first SOT) × P(player | team first SOT)
@@ -534,14 +564,24 @@ def build_predictions(event_odds, home, away, nat_agg, squads, sb_data=None):
             nat_apps = nat.get("apps", 0)
             nat_sot  = nat.get("sot_per90", 0)
         else:
-            nat_lam  = bm_lam  # fallback to bookie when no intl data
-            has_nat  = False
-            nat_apps = nat_sot = None
+            # No national data — try club stats as fallback
+            club_team = find_player_team(name) or home
+            club = get_club_stats(name, club_team, club_data) if club_data else None
+            if club and club.get("sot_per90", 0) > 0:
+                # Club stats weighted at 13% (vs 18% for national — less reliable for intl role)
+                nat_lam  = max(club["sot_per90"], 0.001)
+                has_nat  = True   # treated as data — labelled differently via conf score
+                nat_apps = None
+                nat_sot  = club["sot_per90"]
+            else:
+                nat_lam  = bm_lam
+                has_nat  = False
+                nat_apps = nat_sot = None
 
-        # Weighted base rate: 42% bookie + 18% national (+ 40% bookie if no nat data)
-        # Effective when has_nat: 0.82 * bm_lam + 0.18 * nat_lam
+        # Weighted base rate: 42% bookie + 18% national / 13% club (+ 40% bookie if no data)
         if has_nat:
-            base_lam = 0.42 * bm_lam + 0.18 * nat_lam + 0.40 * bm_lam
+            weight = 0.18 if (nat and nat.get("sot_per90", 0) > 0) else 0.13
+            base_lam = (0.42 + (0.18 - weight)) * bm_lam + weight * nat_lam + 0.40 * bm_lam
         else:
             base_lam = bm_lam
 
@@ -1613,10 +1653,11 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
 if __name__ == "__main__":
     print("Loading data...")
     events   = load("wc_events.json") or []
-    all_odds = load("all_odds.json") or {}
-    squads   = load("wc_squads.json") or {}
-    nat_agg  = load("national_stats_agg.json") or {}
-    sb_data  = load("statsbomb_shot_timing.json") or {}
+    all_odds   = load("all_odds.json") or {}
+    squads     = load("wc_squads.json") or {}
+    nat_agg    = load("national_stats_agg.json") or {}
+    sb_data    = load("statsbomb_shot_timing.json") or {}
+    club_data  = load("club_stats_raw.json") or {}
 
     updated = datetime.now(AEST).strftime("%d %b %Y · %H:%M AEST")
     nat_cov = len(nat_agg)
@@ -1627,7 +1668,7 @@ if __name__ == "__main__":
     for event in sorted(events, key=lambda e: e["commence_time"]):
         eid = event["id"]
         home, away = event["home_team"], event["away_team"]
-        players = build_predictions(all_odds.get(eid,{}), home, away, nat_agg, squads, sb_data)
+        players = build_predictions(all_odds.get(eid,{}), home, away, nat_agg, squads, sb_data, club_data)
         nat_c = sum(1 for p in players[:5] if p.get("has_nat"))
         games.append({
             "id": eid, "home": home, "away": away,
