@@ -111,6 +111,17 @@ def find_player_team(name):
             if "".join(key.split()) == joined:
                 return team
 
+    # 2.5. Squad entry appears inside the query name — handles full legal names
+    # e.g. "Gleison Bremer Silva Nascimento" contains squad entry "bremer" (Brazil)
+    # (a) any word in query exactly matches a single-word squad entry (len >= 4)
+    for w in words:
+        if len(w) >= 4 and w in PLAYER_TEAM_NORM:
+            return PLAYER_TEAM_NORM[w]
+    # (b) multi-word squad entry is a substring of the query
+    for norm_key, team in PLAYER_TEAM_NORM.items():
+        if len(norm_key.split()) >= 2 and norm_key in nn:
+            return team
+
     # 3. Every word in query appears somewhere in one player's full name (substring)
     query_words = [w for w in words if len(w) > 2]
     for norm_key, team in PLAYER_TEAM_NORM.items():
@@ -118,10 +129,12 @@ def find_player_team(name):
         if all(w in joined_key for w in query_words):
             return team
 
-    # 4. Surname (last word) match + first initial
+    # 4. Surname (last word) match + first initial — require surname >= 5 chars to avoid false positives
     if query_words:
-        for surname_idx in [-1, 0]:  # try last word then first word as surname
+        for surname_idx in [-1, 0]:
             surname = query_words[surname_idx]
+            if len(surname) < 5:
+                continue
             first_init = query_words[0][0]
             candidates = PLAYER_WORDS.get(surname, [])
             for norm_key, team in candidates:
@@ -282,11 +295,68 @@ def get_statsbomb_timing(player_name, sb_data):
 
 def get_nat_stats(name, team, nat_agg):
     team_data = nat_agg.get(team, {})
-    nl = name.lower()
-    for pid, s in team_data.items():
-        sname = s.get("name", "").lower()
-        if sname == nl or nl in sname or sname in nl:
+    if not team_data:
+        return None
+
+    nl = _norm(name)
+    nl_words = [w for w in nl.split() if len(w) >= 2]
+
+    # Build normalised nat entries once
+    entries = [(pid, s, _norm(s.get("name", ""))) for pid, s in team_data.items()]
+
+    # 1. Exact normalised match
+    for pid, s, sname in entries:
+        if sname == nl:
             return s
+
+    # 2. One name fully contained in the other (after norm)
+    for pid, s, sname in entries:
+        if nl and sname and (nl in sname or sname in nl):
+            return s
+
+    # 3. Surname match — last word of bookmaker name in nat name words
+    if nl_words:
+        surname = nl_words[-1]
+        if len(surname) >= 3:
+            cands = [(pid, s, sname) for pid, s, sname in entries if surname in sname.split()]
+            if len(cands) == 1:
+                return cands[0][1]
+            # Disambiguate: most word overlap, then first-initial tie-break
+            if len(cands) > 1 and nl_words:
+                nl_set = set(nl_words)
+                first_init = nl_words[0][0]
+                scored = [(len(nl_set & set(c[2].split())), c) for c in cands]
+                max_score = max(s for s, _ in scored)
+                top = [c for s, c in scored if s == max_score]
+                if len(top) == 1 and max_score > 0:
+                    return top[0][1]
+                # Tie-break: first word of nat name starts with same initial
+                for pid, s, sname in top:
+                    sw = sname.split()
+                    if sw and sw[0][:1] == first_init:
+                        return s
+
+    # 4. Word-set intersection — 2+ long words in common
+    nl_long = {w for w in nl_words if len(w) > 3}
+    if len(nl_long) >= 2:
+        for pid, s, sname in entries:
+            sname_long = {w for w in sname.split() if len(w) > 3}
+            if len(nl_long & sname_long) >= 2:
+                return s
+
+    # 5. Joined-name match: handles "Kangin" == "Kang-In" (hyphen removed in one source only)
+    for w in nl_words:
+        if len(w) >= 6:
+            cands5 = [(pid, s, sname) for pid, s, sname in entries if w in sname.replace(" ", "")]
+            if len(cands5) == 1:
+                return cands5[0][1]
+            # Disambiguate by surname
+            if len(cands5) > 1:
+                surname = nl_words[-1]
+                for pid, s, sname in cands5:
+                    if surname in sname.split():
+                        return s
+
     return None
 
 def compute_team_attack_profiles(nat_agg):
