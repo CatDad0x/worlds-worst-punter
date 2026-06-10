@@ -320,7 +320,16 @@ def get_nat_stats(name, team, nat_agg):
         if len(surname) >= 3:
             cands = [(pid, s, sname) for pid, s, sname in entries if surname in sname.split()]
             if len(cands) == 1:
-                return cands[0][1]
+                # Verify: first word of query (given name) initial matches first word of nat name
+                # Prevents "Rayan Vitor" matching "Vitor Roque" via surname "vitor"
+                pid0, s0, sname0 = cands[0]
+                sw0 = sname0.split()
+                given_init = nl_words[0][0]
+                if sw0 and sw0[0][:1] == given_init:
+                    return s0
+                # Also accept if the given name itself appears anywhere in nat name
+                if nl_words[0] in sname0.split():
+                    return s0
             # Disambiguate: most word overlap, then first-initial tie-break
             if len(cands) > 1 and nl_words:
                 nl_set = set(nl_words)
