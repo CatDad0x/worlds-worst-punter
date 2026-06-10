@@ -127,6 +127,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .no-data{text-align:center;color:#4b5563;padding:16px!important;font-style:italic;font-size:.72rem}
 .mfootnote{color:#2a3a5c;font-size:.58rem;margin-top:9px;padding-top:7px;border-top:1px solid #111d30;line-height:1.6}
 .mfootnote sub{font-size:.54rem;vertical-align:sub}
+.bet-slip{background:#0a1628;border:1px solid #22c55e44;border-left:3px solid #22c55e;border-radius:6px;margin:10px 0 4px;padding:10px 12px}
+.slip-header{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.slip-icon{font-size:.85rem}
+.slip-title{font-weight:700;font-size:.72rem;color:#22c55e;flex:1}
+.slip-copy{background:#22c55e22;border:1px solid #22c55e55;color:#22c55e;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;cursor:pointer;letter-spacing:.3px}
+.slip-copy:hover{background:#22c55e44}
+.slip-body{display:flex;flex-direction:column;gap:4px}
+.slip-row{display:flex;gap:8px;align-items:baseline}
+.slip-label{font-size:.58rem;font-weight:700;color:#475569;width:80px;flex-shrink:0;letter-spacing:.4px}
+.slip-val{font-size:.68rem;color:#e2e8f0;font-weight:500}
+.slip-name{font-weight:800;color:#f1f5f9;font-size:.75rem}
+.slip-odds{font-weight:800;color:#22c55e;font-size:.82rem}
+.slip-nav{color:#94a3b8;font-size:.62rem}
+.slip-path .slip-label{color:#334155}
+.slip-note{font-size:.58rem;color:#475569;margin-top:5px;border-top:1px solid #1a2540;padding-top:5px}
 
 /* ── EDGE PILLS ── */
 .epill{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
@@ -347,13 +362,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <span class="mob-only" style="color:#f1f5f9;font-weight:800">First Shot <span class="accent">Edge Finder</span></span>
       </div>
       <div class="site-subtitle desk-only">Cat Dad Model probabilities vs bookmaker-implied odds for every group-stage match.</div>
-      <div class="mob-only" style="color:#64748b;font-size:.6rem;margin-top:2px">Updated 10 Jun 2026 · 10:01 AEST</div>
+      <div class="mob-only" style="color:#64748b;font-size:.6rem;margin-top:2px">Updated 10 Jun 2026 · 10:15 AEST</div>
     </div>
   </div>
   <div class="topbar-right desk-only">
     <div>
       <div class="last-upd-label">Last updated</div>
-      <div class="last-upd-val">10 Jun 2026 · 10:01 AEST</div>
+      <div class="last-upd-val">10 Jun 2026 · 10:15 AEST</div>
     </div>
     <div class="refresh-btn" onclick="location.reload()">↻</div>
   </div>
@@ -375,7 +390,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   </div>
   <div class="kpi">
     <div class="kpi-icon amber">🕐</div>
-    <div><div class="kpi-n">10 Jun 2026</div><div class="kpi-sub">Last Updated<br><span class="dim">10:01 AEST</span></div></div>
+    <div><div class="kpi-n">10 Jun 2026</div><div class="kpi-sub">Last Updated<br><span class="dim">10:15 AEST</span></div></div>
   </div>
 </div>
 
@@ -414,7 +429,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">1</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#06b6d4">GM</div>
+                  <div class="avatar" style="background:#3b82f6">GM</div>
                   <div>
                     <div class="be-name">Gabriel Martinelli  <span class='early-tag'>⚡EARLY</span> </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -435,7 +450,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">2</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#ef4444">LS</div>
+                  <div class="avatar" style="background:#06b6d4">LS</div>
                   <div>
                     <div class="be-name">Luiz Henrique Andre Rosa da Silva   </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -456,7 +471,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">3</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#ec4899">MC</div>
+                  <div class="avatar" style="background:#06b6d4">MC</div>
                   <div>
                     <div class="be-name">Matheus Cunha   </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -477,7 +492,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">4</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#06b6d4">GM</div>
+                  <div class="avatar" style="background:#3b82f6">GM</div>
                   <div>
                     <div class="be-name">Gabriel Martinelli  <span class='early-tag'>⚡EARLY</span> </div>
                     <div class="be-country">🇧🇷 Brazil</div>
@@ -498,7 +513,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               <td><span class="rank-circle">5</span></td>
               <td>
                 <div class="be-player">
-                  <div class="avatar" style="background:#8b5cf6">FG</div>
+                  <div class="avatar" style="background:#06b6d4">FG</div>
                   <div>
                     <div class="be-name">Ferran Torres Garcia  <span class='early-tag'>⚡EARLY</span> </div>
                     <div class="be-country">🇪🇸 Spain</div>
@@ -610,7 +625,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-80d82d11">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-80d82d11')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-80d82d11-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇲🇽 Mexico vs South Africa 🇿🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇲🇽 Santiago Gimenez</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.22</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm wh">William <strong>HILL</strong></span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">William Hill → Football → FIFA World Cup → Player Specials → First Player to Have a Shot on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-384cbb5d">
@@ -688,7 +720,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-384cbb5d">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-384cbb5d')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-384cbb5d-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇰🇷 South Korea vs Czech Republic 🇨🇿</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇰🇷 Cho Gue-sung</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.57</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm xbet">1xBet</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">1xBet → Football → FIFA World Cup → Player Stats → Shots on Target (use as anytime SOT signal)</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-d1f4f946">
@@ -766,7 +815,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-d1f4f946">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-d1f4f946')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-d1f4f946-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇨🇦 Canada vs Bosnia & Herzegovina 🇧🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇨🇦 Promise Oluwatobi Emmanuel David</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.36</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm wh">William <strong>HILL</strong></span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">William Hill → Football → FIFA World Cup → Player Specials → First Player to Have a Shot on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-c12986f4">
@@ -844,7 +910,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-c12986f4">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-c12986f4')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-c12986f4-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇺🇸 USA vs Paraguay 🇵🇾</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇺🇸 Christian Pulisic</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.40</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-26634922">
@@ -922,7 +1005,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-26634922">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-26634922')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-26634922-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇶🇦 Qatar vs Switzerland 🇨🇭</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇨🇭 Breel Embolo</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.06</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-f6c8748a">
@@ -1000,7 +1100,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-f6c8748a">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-f6c8748a')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-f6c8748a-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇧🇷 Brazil vs Morocco 🇲🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇧🇷 Vinicius Junior</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.19</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-5ae41a06">
@@ -1078,7 +1195,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-5ae41a06">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-5ae41a06')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-5ae41a06-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇭🇹 Haiti vs Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scott McTominay</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.15</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-564084f5">
@@ -1156,7 +1290,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-564084f5">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-564084f5')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-564084f5-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇦🇺 Australia vs Turkey 🇹🇷</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇹🇷 Kenan Yildiz</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.44</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm wh">William <strong>HILL</strong></span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">William Hill → Football → FIFA World Cup → Player Specials → First Player to Have a Shot on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-d79edbd6">
@@ -1234,7 +1385,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-d79edbd6">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-d79edbd6')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-d79edbd6-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇩🇪 Germany vs Curaçao 🇨🇼</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇩🇪 Kai Havertz</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.02</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-32ec06ab">
@@ -1312,7 +1480,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-32ec06ab">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-32ec06ab')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-32ec06ab-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇳🇱 Netherlands vs Japan 🇯🇵</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇯🇵 Koki Ogawa</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.62</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm xbet">1xBet</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">1xBet → Football → FIFA World Cup → Player Stats → Shots on Target (use as anytime SOT signal)</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-05752bb3">
@@ -1390,7 +1575,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-05752bb3">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-05752bb3')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-05752bb3-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇨🇮 Ivory Coast vs Ecuador 🇪🇨</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇨 Enner Valencia</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.33</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-b55f9569">
@@ -1468,7 +1670,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-b55f9569">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-b55f9569')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-b55f9569-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇸🇪 Sweden vs Tunisia 🇹🇳</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇸🇪 Viktor Gyokeres</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.20</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-c54f00b1">
@@ -1546,7 +1765,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-c54f00b1">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-c54f00b1')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-c54f00b1-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇪🇸 Spain vs Cape Verde 🇨🇻</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇸 Ferran Torres Garcia</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.14</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm xbet">1xBet</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">1xBet → Football → FIFA World Cup → Player Stats → Shots on Target (use as anytime SOT signal)</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-fbfb95c6">
@@ -1624,7 +1860,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-fbfb95c6">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-fbfb95c6')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-fbfb95c6-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇧🇪 Belgium vs Egypt 🇪🇬</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇬 Mohamed Salah</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.64</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-64b91c5f">
@@ -1702,7 +1955,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-64b91c5f">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-64b91c5f')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-64b91c5f-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇸🇦 Saudi Arabia vs Uruguay 🇺🇾</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇺🇾 Brian Rodriguez</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.25</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm xbet">1xBet</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">1xBet → Football → FIFA World Cup → Player Stats → Shots on Target (use as anytime SOT signal)</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-ec51b9c4">
@@ -1780,7 +2050,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-ec51b9c4">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-ec51b9c4')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-ec51b9c4-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇮🇷 Iran vs New Zealand 🇳🇿</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇮🇷 Mehdi Ghaedi</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.38</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-73a4fcd1">
@@ -1858,7 +2145,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-73a4fcd1">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-73a4fcd1')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-73a4fcd1-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇫🇷 France vs Senegal 🇸🇳</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇫🇷 Jean-Philippe Mateta</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.22</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-4d4f2b9b">
@@ -1936,7 +2240,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-4d4f2b9b">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-4d4f2b9b')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-4d4f2b9b-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇮🇶 Iraq vs Norway 🇳🇴</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇮🇶 Aymen Hussein</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.87</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-f31b2ee9">
@@ -2014,7 +2335,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-f31b2ee9">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-f31b2ee9')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-f31b2ee9-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇦🇷 Argentina vs Algeria 🇩🇿</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇦🇷 Lionel Messi</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.05</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-25161cf6">
@@ -2092,7 +2430,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-25161cf6">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-25161cf6')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-25161cf6-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇦🇹 Austria vs Jordan 🇯🇴</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇦🇹 Michael Gregoritsch</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.14</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-6cc871c1">
@@ -2170,7 +2525,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-6cc871c1">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-6cc871c1')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-6cc871c1-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇵🇹 Portugal vs DR Congo 🇨🇩</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇵🇹 Cristiano Ronaldo</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.12</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm xbet">1xBet</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">1xBet → Football → FIFA World Cup → Player Stats → Shots on Target (use as anytime SOT signal)</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-689096c8">
@@ -2248,7 +2620,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-689096c8">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-689096c8')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-689096c8-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England vs Croatia 🇭🇷</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Harry Kane</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.07</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-87afdb85">
@@ -2326,7 +2715,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-87afdb85">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-87afdb85')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-87afdb85-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇬🇭 Ghana vs Panama 🇵🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇬🇭 Jordan Ayew</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.48</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-22083e7a">
@@ -2404,7 +2810,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-22083e7a">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-22083e7a')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-22083e7a-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇺🇿 Uzbekistan vs Colombia 🇨🇴</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇺🇿 Eldor Shomurodov</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.73</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-66ebb9e3">
@@ -2482,7 +2905,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-66ebb9e3">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-66ebb9e3')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-66ebb9e3-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇨🇿 Czech Republic vs South Africa 🇿🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇨🇿 Tomas Chory</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.66</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-289bc2e9">
@@ -2560,7 +3000,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-289bc2e9">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-289bc2e9')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-289bc2e9-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇨🇭 Switzerland vs Bosnia & Herzegovina 🇧🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇧🇦 Edin Dzeko</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.56</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-fa950228">
@@ -2638,7 +3095,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-fa950228">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-fa950228')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-fa950228-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇨🇦 Canada vs Qatar 🇶🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇨🇦 Tani Oluwaseyi</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.38</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-0f2aeae6">
@@ -2716,7 +3190,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-0f2aeae6">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-0f2aeae6')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-0f2aeae6-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇲🇽 Mexico vs South Korea 🇰🇷</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇲🇽 Raul Jimenez</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.28</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-065b3573">
@@ -2794,7 +3285,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-065b3573">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-065b3573')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-065b3573-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇺🇸 USA vs Australia 🇦🇺</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇺🇸 Christian Pulisic</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.34</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-4cd769aa">
@@ -2872,7 +3380,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-4cd769aa">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-4cd769aa')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-4cd769aa-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland vs Morocco 🇲🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇲🇦 Brahim Diaz</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.48</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-ef0f74a9">
@@ -2950,7 +3475,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-ef0f74a9">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-ef0f74a9')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-ef0f74a9-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇧🇷 Brazil vs Haiti 🇭🇹</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇧🇷 Gabriel Martinelli</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.36</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-f955d4b3">
@@ -3028,7 +3570,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-f955d4b3">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-f955d4b3')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-f955d4b3-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇹🇷 Turkey vs Paraguay 🇵🇾</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇹🇷 Kenan Yildiz</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.79</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-4f0c5185">
@@ -3106,7 +3665,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-4f0c5185">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-4f0c5185')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-4f0c5185-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇳🇱 Netherlands vs Sweden 🇸🇪</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇳🇱 Cody Gakpo</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.36</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-f1ab0f69">
@@ -3184,7 +3760,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-f1ab0f69">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-f1ab0f69')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-f1ab0f69-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇩🇪 Germany vs Ivory Coast 🇨🇮</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇩🇪 Nick Woltemade</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.29</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-681895f2">
@@ -3262,7 +3855,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-681895f2">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-681895f2')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-681895f2-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇪🇨 Ecuador vs Curaçao 🇨🇼</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇨 Enner Valencia</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.03</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-dfc5202c">
@@ -3340,7 +3950,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-dfc5202c">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-dfc5202c')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-dfc5202c-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇹🇳 Tunisia vs Japan 🇯🇵</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇯🇵 Koki Ogawa</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.76</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-73529a24">
@@ -3418,7 +4045,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-73529a24">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-73529a24')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-73529a24-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇪🇸 Spain vs Saudi Arabia 🇸🇦</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇸 Ferran Torres Garcia</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.24</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-5f92f257">
@@ -3496,7 +4140,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-5f92f257">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-5f92f257')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-5f92f257-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇧🇪 Belgium vs Iran 🇮🇷</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇧🇪 Romelu Lukaku</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.19</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-852a3abe">
@@ -3574,7 +4235,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-852a3abe">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-852a3abe')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-852a3abe-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇺🇾 Uruguay vs Cape Verde 🇨🇻</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇺🇾 Facundo Pellistri</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.65</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-c1ec9a65">
@@ -3652,7 +4330,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-c1ec9a65">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-c1ec9a65')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-c1ec9a65-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇳🇿 New Zealand vs Egypt 🇪🇬</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇪🇬 Mohamed Salah</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.23</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard" id="mc-be6c63f4">
@@ -3730,7 +4425,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
               </tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
+        <div class="bet-slip" id="slip-be6c63f4">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('slip-be6c63f4')">Copy</button>
+          </div>
+          <div class="slip-body" id="slip-be6c63f4-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">🇦🇷 Argentina vs Austria 🇦🇹</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">🇦🇷 Lionel Messi</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">1.09</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val"><span class="bm br">BetRivers</span></span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">BetRivers → Football → FIFA World Cup → Player Props → Shots on Target</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mcard card-dim" id="mc-7ad7a0ce">
@@ -3764,7 +4476,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-3f484737">
@@ -3798,7 +4511,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-fd8533b6">
@@ -3832,7 +4546,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-8ba93d19">
@@ -3866,7 +4581,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-2f49dd8d">
@@ -3900,7 +4616,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-c1bc8c26">
@@ -3934,7 +4651,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-68bfc965">
@@ -3968,7 +4686,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-512ac18b">
@@ -4002,7 +4721,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-c9ef5822">
@@ -4036,7 +4756,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-885ba958">
@@ -4070,7 +4791,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-d1279ce7">
@@ -4104,7 +4826,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-5993bd51">
@@ -4138,7 +4861,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-c0355dfc">
@@ -4172,7 +4896,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-a5a0b544">
@@ -4206,7 +4931,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-0ec28b84">
@@ -4240,7 +4966,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-0ed0233b">
@@ -4274,7 +5001,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-f3c4657d">
@@ -4308,7 +5036,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-22f6ac06">
@@ -4342,7 +5071,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-f41aeac9">
@@ -4376,7 +5106,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-b86b4d60">
@@ -4410,7 +5141,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-7e6aee29">
@@ -4444,7 +5176,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-e07b1926">
@@ -4478,7 +5211,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-dcff2e31">
@@ -4512,7 +5246,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-581691da">
@@ -4546,7 +5281,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-3e3b5fa2">
@@ -4580,7 +5316,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-537c0997">
@@ -4614,7 +5351,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-4be17c8e">
@@ -4648,7 +5386,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-67ae5751">
@@ -4682,7 +5421,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-13eab94a">
@@ -4716,7 +5456,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-8756200e">
@@ -4750,7 +5491,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     <div class="mcard card-dim" id="mc-54697f45">
@@ -4784,7 +5526,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+
       </div>
     </div>
     </div>
@@ -4827,7 +5570,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="sb-stat"><span class="sb-stat-label">Total Matches</span><span class="sb-stat-val">72</span></div>
       <div class="sb-stat"><span class="sb-stat-label">With Live Odds</span><span class="sb-stat-val">41</span></div>
       <div class="sb-stat"><span class="sb-stat-label">Teams with National Data</span><span class="sb-stat-val">48</span></div>
-      <p class="sb-upd">Last Updated <span>10 Jun 2026 · 10:01 AEST</span></p>
+      <p class="sb-upd">Last Updated <span>10 Jun 2026 · 10:15 AEST</span></p>
     </div>
 
     <!-- Data Coverage -->
@@ -4877,6 +5620,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <script>
 // Toggle match cards
 // ── MODAL ──
+function copySlip(slipId) {
+  var rows = document.querySelectorAll('#' + slipId + ' .slip-row');
+  var lines = [];
+  rows.forEach(function(r) {
+    var lbl = r.querySelector('.slip-label');
+    var val = r.querySelector('.slip-val');
+    if(lbl && val) lines.push(lbl.innerText + ' ' + val.innerText);
+  });
+  var text = lines.join('
+');
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('#' + slipId + ' .slip-copy');
+    if(btn) { btn.innerText = 'Copied!'; setTimeout(function(){ btn.innerText = 'Copy'; }, 1800); }
+  }).catch(function() {
+    var btn = document.querySelector('#' + slipId + ' .slip-copy');
+    if(btn) btn.innerText = 'Copy manually';
+  });
+}
+
 function openModal() {
   document.getElementById('model-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -5043,6 +5805,32 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){
           <div style="display:flex;align-items:center;gap:8px"><span class="epill e-neutral">Neutral</span><span style="font-size:.75rem;color:#94a3b8">Model and market agree. No edge either way.</span></div>
           <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-fad">−2.0% Fade</span><span style="font-size:.75rem;color:#94a3b8">Market is overrating this player vs our model. Consider avoiding.</span></div>
         </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <div class="modal-section">
+        <h3>🎰 How to Place This Bet</h3>
+        <p style="margin-bottom:10px">The market you're looking for is called <strong>"First Player to Have a Shot on Target"</strong> — not "Anytime Shot on Target". Here's where to find it on common bookmakers:</p>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.72rem">
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Bet365</div>
+            <div style="color:#94a3b8">Football → FIFA World Cup → [Match] → Player Bets → <strong style="color:#e2e8f0">First Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">William Hill</div>
+            <div style="color:#94a3b8">Football → World Cup → [Match] → Player Specials → <strong style="color:#e2e8f0">First Player to Have a Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Paddy Power / Betfair</div>
+            <div style="color:#94a3b8">Football → World Cup → [Match] → Player Bets → <strong style="color:#e2e8f0">First Player to Have a Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Unibet</div>
+            <div style="color:#94a3b8">Football → FIFA World Cup → [Match] → Player Props → <strong style="color:#e2e8f0">First Shot on Target</strong></div>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:.68rem;color:#475569">💡 The odds shown on this site (e.g. 1.32 for Bruno Fernandes) are from the <em>Anytime Shot on Target</em> market — we use those as input to build the model. The actual bet you place is the <em>First</em> SOT market, which will have longer odds. Always verify prices are live before placing.</p>
       </div>
 
       <hr class="modal-divider">

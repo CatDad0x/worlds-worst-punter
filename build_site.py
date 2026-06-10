@@ -637,6 +637,45 @@ def best_edges_rows(all_games):
             </tr>""")
     return "\n".join(rows)
 
+def bet_slip_html(players, home, away, uid):
+    """Render a bet slip callout for the top positive-edge player in a match."""
+    top = next((p for p in players if p["edge"] > 0), None)
+    if not top:
+        return ""
+    hf = COUNTRY_FLAGS.get(home, "")
+    af = COUNTRY_FLAGS.get(away, "")
+    match_str = f"{hf} {home} vs {away} {af}"
+    bm_name = top["bm"]
+    # Decide which specific market name to show per bookmaker
+    bm_market = {
+        "William Hill": "Player Specials → First Player to Have a Shot on Target",
+        "Unibet":       "Player Props → First Shot on Target",
+        "Paddy Power":  "Player Bets → First Player to Have a Shot on Target",
+        "Bet365":       "Player Bets → First Shot on Target",
+        "1xBet":        "Player Stats → Shots on Target (use as anytime SOT signal)",
+        "BetRivers":    "Player Props → Shots on Target",
+        "FanDuel":      "Player Props → Shots on Target",
+    }.get(bm_name, "Player Specials → First Shot on Target")
+    flag = COUNTRY_FLAGS.get(top.get("team",""), "")
+    slip_id = f"slip-{uid}"
+    return f"""
+        <div class="bet-slip" id="{slip_id}">
+          <div class="slip-header">
+            <span class="slip-icon">📋</span>
+            <span class="slip-title">Top Pick — Bet Slip</span>
+            <button class="slip-copy" onclick="copySlip('{slip_id}')">Copy</button>
+          </div>
+          <div class="slip-body" id="{slip_id}-text">
+            <div class="slip-row"><span class="slip-label">MATCH</span><span class="slip-val">{match_str}</span></div>
+            <div class="slip-row"><span class="slip-label">MARKET</span><span class="slip-val">First Player to Have a Shot on Target</span></div>
+            <div class="slip-row"><span class="slip-label">SELECTION</span><span class="slip-val slip-name">{flag} {top["name"]}</span></div>
+            <div class="slip-row"><span class="slip-label">ODDS</span><span class="slip-val slip-odds">{top["price"]:.2f}</span></div>
+            <div class="slip-row"><span class="slip-label">BOOKMAKER</span><span class="slip-val">{bm_html(bm_name)}</span></div>
+            <div class="slip-row slip-path"><span class="slip-label">WHERE TO FIND</span><span class="slip-val slip-nav">{bm_name} → Football → FIFA World Cup → {bm_market}</span></div>
+            <div class="slip-note">⚠ Always verify odds are live before placing. Check team news for confirmed lineup.</div>
+          </div>
+        </div>"""
+
 def match_player_rows(players):
     if not players:
         return '<tr><td colspan="7" class="no-data">Odds not yet available — check back closer to kick-off</td></tr>'
@@ -697,7 +736,8 @@ def match_cards(games):
 {match_player_rows(g["players"])}
           </tbody>
         </table>
-        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Model: intl SOT rate + bookie λ · timing · FK +12%. <span class="fk-tag">FK</span> = FK taker. Odds shown = best available across William Hill, Unibet, 1xBet.</p>
+        <p class="mfootnote">First SOT prob = λ<sub>player</sub>/Σλ. Odds signal = anytime SOT (Over 0.5) from William Hill, 1xBet, FanDuel. <span class="fk-tag">FK</span> = FK taker. Place the bet under <strong>First Player to Have a Shot on Target</strong> on your bookmaker.</p>
+{bet_slip_html(g["players"], g["home"], g["away"], uid) if g["has_data"] else ""}
       </div>
     </div>""")
     return "\n".join(cards)
@@ -850,6 +890,21 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .no-data{{text-align:center;color:#4b5563;padding:16px!important;font-style:italic;font-size:.72rem}}
 .mfootnote{{color:#2a3a5c;font-size:.58rem;margin-top:9px;padding-top:7px;border-top:1px solid #111d30;line-height:1.6}}
 .mfootnote sub{{font-size:.54rem;vertical-align:sub}}
+.bet-slip{{background:#0a1628;border:1px solid #22c55e44;border-left:3px solid #22c55e;border-radius:6px;margin:10px 0 4px;padding:10px 12px}}
+.slip-header{{display:flex;align-items:center;gap:7px;margin-bottom:8px}}
+.slip-icon{{font-size:.85rem}}
+.slip-title{{font-weight:700;font-size:.72rem;color:#22c55e;flex:1}}
+.slip-copy{{background:#22c55e22;border:1px solid #22c55e55;color:#22c55e;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;cursor:pointer;letter-spacing:.3px}}
+.slip-copy:hover{{background:#22c55e44}}
+.slip-body{{display:flex;flex-direction:column;gap:4px}}
+.slip-row{{display:flex;gap:8px;align-items:baseline}}
+.slip-label{{font-size:.58rem;font-weight:700;color:#475569;width:80px;flex-shrink:0;letter-spacing:.4px}}
+.slip-val{{font-size:.68rem;color:#e2e8f0;font-weight:500}}
+.slip-name{{font-weight:800;color:#f1f5f9;font-size:.75rem}}
+.slip-odds{{font-weight:800;color:#22c55e;font-size:.82rem}}
+.slip-nav{{color:#94a3b8;font-size:.62rem}}
+.slip-path .slip-label{{color:#334155}}
+.slip-note{{font-size:.58rem;color:#475569;margin-top:5px;border-top:1px solid #1a2540;padding-top:5px}}
 
 /* ── EDGE PILLS ── */
 .epill{{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}}
@@ -1245,6 +1300,24 @@ body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 <script>
 // Toggle match cards
 // ── MODAL ──
+function copySlip(slipId) {{
+  var rows = document.querySelectorAll('#' + slipId + ' .slip-row');
+  var lines = [];
+  rows.forEach(function(r) {{
+    var lbl = r.querySelector('.slip-label');
+    var val = r.querySelector('.slip-val');
+    if(lbl && val) lines.push(lbl.innerText + ' ' + val.innerText);
+  }});
+  var text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(function() {{
+    var btn = document.querySelector('#' + slipId + ' .slip-copy');
+    if(btn) {{ btn.innerText = 'Copied!'; setTimeout(function(){{ btn.innerText = 'Copy'; }}, 1800); }}
+  }}).catch(function() {{
+    var btn = document.querySelector('#' + slipId + ' .slip-copy');
+    if(btn) btn.innerText = 'Copy manually';
+  }});
+}}
+
 function openModal() {{
   document.getElementById('model-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1411,6 +1484,32 @@ document.querySelectorAll('.mcard:not(.card-dim)').forEach(function(c){{
           <div style="display:flex;align-items:center;gap:8px"><span class="epill e-neutral">Neutral</span><span style="font-size:.75rem;color:#94a3b8">Model and market agree. No edge either way.</span></div>
           <div style="display:flex;align-items:center;gap:8px"><span class="epill e-strong-fad">−2.0% Fade</span><span style="font-size:.75rem;color:#94a3b8">Market is overrating this player vs our model. Consider avoiding.</span></div>
         </div>
+      </div>
+
+      <hr class="modal-divider">
+
+      <div class="modal-section">
+        <h3>🎰 How to Place This Bet</h3>
+        <p style="margin-bottom:10px">The market you're looking for is called <strong>"First Player to Have a Shot on Target"</strong> — not "Anytime Shot on Target". Here's where to find it on common bookmakers:</p>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.72rem">
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Bet365</div>
+            <div style="color:#94a3b8">Football → FIFA World Cup → [Match] → Player Bets → <strong style="color:#e2e8f0">First Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">William Hill</div>
+            <div style="color:#94a3b8">Football → World Cup → [Match] → Player Specials → <strong style="color:#e2e8f0">First Player to Have a Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Paddy Power / Betfair</div>
+            <div style="color:#94a3b8">Football → World Cup → [Match] → Player Bets → <strong style="color:#e2e8f0">First Player to Have a Shot on Target</strong></div>
+          </div>
+          <div style="background:#0a1628;border:1px solid #1a2540;border-radius:5px;padding:8px 10px">
+            <div style="font-weight:700;color:#f1f5f9;margin-bottom:3px">Unibet</div>
+            <div style="color:#94a3b8">Football → FIFA World Cup → [Match] → Player Props → <strong style="color:#e2e8f0">First Shot on Target</strong></div>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:.68rem;color:#475569">💡 The odds shown on this site (e.g. 1.32 for Bruno Fernandes) are from the <em>Anytime Shot on Target</em> market — we use those as input to build the model. The actual bet you place is the <em>First</em> SOT market, which will have longer odds. Always verify prices are live before placing.</p>
       </div>
 
       <hr class="modal-divider">
