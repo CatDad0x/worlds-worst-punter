@@ -8,7 +8,7 @@ import time
 import os
 
 FOOTBALL_API_KEY = "e157d9a7a00d8284c3447c1a3fa54e24"
-ODDS_API_KEY = "c180ac9136d1be5cc6814e04979824a5"
+ODDS_API_KEY = "fffb34bbb178ed2f1f28c7720dea449b"
 FOOTBALL_BASE = "https://v3.football.api-sports.io"
 FB_HEADERS = {"x-apisports-key": FOOTBALL_API_KEY}
 CACHE_DIR = "cache"
